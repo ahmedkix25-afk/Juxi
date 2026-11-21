@@ -1,0 +1,276 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global default-deny safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core Primitives
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidSlug(slug) {
+      return slug is string && slug.size() >= 2 && slug.size() <= 100 && slug.matches('^[a-z0-9-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerifiedSignedIn() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isBootstrappedAdmin() {
+      return isVerifiedSignedIn() && request.auth.token.email == 'ahmdkhaaadd@gmail.com';
+    }
+
+    function isAdmin() {
+      return isBootstrappedAdmin() || (
+        isVerifiedSignedIn() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidProductTheme(theme) {
+      return theme is map &&
+        theme.keys().hasAll(['primaryColor', 'secondaryColor']) &&
+        theme.keys().hasOnly(['primaryColor', 'secondaryColor']) &&
+        theme.primaryColor is string && theme.primaryColor.matches('^#[0-9a-fA-F]{6}$') &&
+        theme.secondaryColor is string && theme.secondaryColor.matches('^#[0-9a-fA-F]{6}$');
+    }
+
+    // Validation Blueprint: Product
+    function isValidProduct(data, productSlug) {
+      return data.keys().hasAll([
+          'name', 'slug', 'price', 'originalPrice', 'currency',
+          'description', 'features', 'images', 'status',
+          'createdBy', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'name', 'slug', 'price', 'originalPrice', 'currency',
+          'description', 'features', 'images', 'status',
+          'createdBy', 'createdAt', 'updatedAt',
+          'theme', 'model3dUrl', 'countdownEndsAt', 'remainingStock',
+          'whatsappNumber', 'reviews', 'faqs'
+        ]) &&
+        data.name is string && data.name.size() >= 2 && data.name.size() <= 120 &&
+        isValidSlug(data.slug) && data.slug == productSlug &&
+        data.price is number && data.price > 0 && data.price <= 10000000 &&
+        data.originalPrice is number && data.originalPrice >= 0 && data.originalPrice <= 10000000 &&
+        data.currency is string && data.currency.size() >= 1 && data.currency.size() <= 16 &&
+        data.description is string && data.description.size() >= 5 && data.description.size() <= 2000 &&
+        data.features is list && data.features.size() <= 15 &&
+        (data.features.size() == 0 || (data.features[0] is string && data.features[0].size() <= 200)) &&
+        data.images is list && data.images.size() >= 1 && data.images.size() <= 8 &&
+        (data.images[0] is string && data.images[0].size() >= 1 && data.images[0].size() <= 1000) &&
+        data.status in ['active', 'hidden'] &&
+        data.createdBy is string && data.createdBy.size() >= 1 && data.createdBy.size() <= 128 &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp &&
+        (!('theme' in data) || isValidProductTheme(data.theme)) &&
+        (!('model3dUrl' in data) || (data.model3dUrl is string && data.model3dUrl.size() <= 1000)) &&
+        (!('countdownEndsAt' in data) || (data.countdownEndsAt is string && data.countdownEndsAt.size() <= 64)) &&
+        (!('remainingStock' in data) || (data.remainingStock is int && data.remainingStock >= 0 && data.remainingStock <= 9999)) &&
+        (!('whatsappNumber' in data) || (data.whatsappNumber is string && data.whatsappNumber.size() <= 32)) &&
+        (!('reviews' in data) || (data.reviews is list && data.reviews.size() <= 12)) &&
+        (!('faqs' in data) || (data.faqs is list && data.faqs.size() <= 12));
+    }
+
+    // Validation Blueprint: Order
+    function isValidOrder(data) {
+      return data.keys().hasAll([
+          'orderCode', 'productSlug', 'productName', 'unitPrice', 'quantity',
+          'totalPrice', 'currency', 'customerName', 'customerPhone',
+          'governorate', 'address', 'notes', 'paymentMethod', 'status',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'orderCode', 'productSlug', 'productName', 'unitPrice', 'quantity',
+          'totalPrice', 'currency', 'customerName', 'customerPhone',
+          'governorate', 'address', 'notes', 'paymentMethod', 'status',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.orderCode is string && data.orderCode.size() >= 4 && data.orderCode.size() <= 32 &&
+        data.orderCode.matches('^[A-Z0-9-]+$') &&
+        isValidSlug(data.productSlug) &&
+        data.productName is string && data.productName.size() >= 2 && data.productName.size() <= 120 &&
+        data.unitPrice is number && data.unitPrice > 0 && data.unitPrice <= 10000000 &&
+        data.quantity is int && data.quantity >= 1 && data.quantity <= 99 &&
+        data.totalPrice is number &&
+        math.abs(data.totalPrice - (data.unitPrice * data.quantity)) < 0.01 &&
+        data.currency is string && data.currency.size() >= 1 && data.currency.size() <= 16 &&
+        data.customerName is string && data.customerName.size() >= 2 && data.customerName.size() <= 100 &&
+        data.customerPhone is string && data.customerPhone.size() >= 7 && data.customerPhone.size() <= 24 &&
+        data.governorate is string && data.governorate.size() >= 2 && data.governorate.size() <= 60 &&
+        data.address is string && data.address.size() >= 5 && data.address.size() <= 400 &&
+        data.notes is string && data.notes.size() <= 500 &&
+        data.paymentMethod == 'cod' &&
+        data.status in ['new', 'confirmed', 'shipped', 'delivered', 'cancelled'] &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // Validation Blueprint: AdminUser
+    function isValidAdminUser(data) {
+      return data.keys().hasAll(['email', 'role', 'createdAt']) &&
+        data.keys().hasOnly(['email', 'role', 'createdAt']) &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 120 &&
+        data.role == 'admin' &&
+        data.createdAt is timestamp;
+    }
+
+    // Validation Blueprint: NotificationSettings
+    function isValidNotificationSettings(data) {
+      return data.keys().hasAll([
+          'storeName', 'defaultCurrency', 'soundEnabled',
+          'telegramEnabled', 'telegramBotToken', 'telegramChatId',
+          'whatsappEnabled', 'whatsappPhone', 'whatsappApiKey',
+          'emailEnabled', 'notificationEmail', 'webhookUrl', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'storeName', 'defaultCurrency', 'soundEnabled',
+          'telegramEnabled', 'telegramBotToken', 'telegramChatId',
+          'whatsappEnabled', 'whatsappPhone', 'whatsappApiKey',
+          'emailEnabled', 'notificationEmail', 'webhookUrl', 'updatedAt'
+        ]) &&
+        data.storeName is string && data.storeName.size() >= 1 && data.storeName.size() <= 80 &&
+        data.defaultCurrency is string && data.defaultCurrency.size() >= 1 && data.defaultCurrency.size() <= 16 &&
+        data.soundEnabled is bool &&
+        data.telegramEnabled is bool &&
+        data.telegramBotToken is string && data.telegramBotToken.size() <= 160 &&
+        data.telegramChatId is string && data.telegramChatId.size() <= 64 &&
+        data.whatsappEnabled is bool &&
+        data.whatsappPhone is string && data.whatsappPhone.size() <= 32 &&
+        data.whatsappApiKey is string && data.whatsappApiKey.size() <= 200 &&
+        data.emailEnabled is bool &&
+        data.notificationEmail is string && data.notificationEmail.size() <= 120 &&
+        data.webhookUrl is string && data.webhookUrl.size() <= 300 &&
+        data.updatedAt is timestamp;
+    }
+
+    // Collection: /products/{productSlug}
+    match /products/{productSlug} {
+      allow get: if isValidSlug(productSlug) && (resource == null || existing().status == 'active' || isAdmin());
+      allow list: if existing().status == 'active' || isAdmin();
+
+      allow create: if isVerifiedSignedIn() &&
+        isValidSlug(productSlug) &&
+        isValidProduct(incoming(), productSlug) &&
+        incoming().createdBy == request.auth.uid &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+
+      allow update: if isVerifiedSignedIn() &&
+        isValidSlug(productSlug) &&
+        isValidProduct(incoming(), productSlug) &&
+        incoming().createdBy == existing().createdBy &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().slug == existing().slug &&
+        incoming().updatedAt == request.time &&
+        isAdmin() && (
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'price', 'originalPrice', 'currency',
+            'description', 'features', 'images', 'status', 'updatedAt',
+            'theme', 'model3dUrl', 'countdownEndsAt', 'remainingStock',
+            'whatsappNumber', 'reviews', 'faqs'
+          ]) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt'])
+        );
+
+      allow delete: if isVerifiedSignedIn() && isValidSlug(productSlug) && isAdmin();
+    }
+
+    // Collection: /orders/{orderId} (Contains PII - strictly admin-only reads)
+    match /orders/{orderId} {
+      allow get: if isValidId(orderId) && isAdmin();
+      allow list: if isAdmin();
+
+      // Public customer COD order creation with strict server-side price & product integrity check
+      allow create: if isValidId(orderId) &&
+        isValidOrder(incoming()) &&
+        incoming().status == 'new' &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        exists(/databases/$(database)/documents/products/$(incoming().productSlug)) &&
+        get(/databases/$(database)/documents/products/$(incoming().productSlug)).data.status == 'active' &&
+        get(/databases/$(database)/documents/products/$(incoming().productSlug)).data.price == incoming().unitPrice;
+
+      // Action-based Admin status/notes updates
+      allow update: if isVerifiedSignedIn() &&
+        isValidId(orderId) &&
+        isValidOrder(incoming()) &&
+        incoming().orderCode == existing().orderCode &&
+        incoming().productSlug == existing().productSlug &&
+        incoming().productName == existing().productName &&
+        incoming().unitPrice == existing().unitPrice &&
+        incoming().quantity == existing().quantity &&
+        incoming().totalPrice == existing().totalPrice &&
+        incoming().currency == existing().currency &&
+        incoming().customerName == existing().customerName &&
+        incoming().customerPhone == existing().customerPhone &&
+        incoming().governorate == existing().governorate &&
+        incoming().address == existing().address &&
+        incoming().paymentMethod == existing().paymentMethod &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        isAdmin() && (
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'notes', 'updatedAt']) ||
+          incoming().diff(existing()).affectedKeys().hasOnly(['notes', 'updatedAt'])
+        );
+
+      allow delete: if isVerifiedSignedIn() && isValidId(orderId) && isAdmin();
+    }
+
+    // Collection: /admins/{adminUid}
+    match /admins/{adminUid} {
+      allow get: if isValidId(adminUid) && (isAdmin() || (isVerifiedSignedIn() && request.auth.uid == adminUid));
+      allow list: if isAdmin();
+      allow create: if isVerifiedSignedIn() &&
+        isValidId(adminUid) &&
+        isValidAdminUser(incoming()) &&
+        incoming().createdAt == request.time &&
+        isAdmin();
+      allow update: if false;
+      allow delete: if isVerifiedSignedIn() && isValidId(adminUid) && isAdmin() && request.auth.uid != adminUid;
+    }
+
+    // Collection: /settings/{settingId}
+    match /settings/{settingId} {
+      allow get: if isValidId(settingId) && isAdmin();
+      allow list: if isAdmin();
+      allow create: if isVerifiedSignedIn() &&
+        isValidId(settingId) &&
+        settingId == 'notifications' &&
+        isValidNotificationSettings(incoming()) &&
+        incoming().updatedAt == request.time &&
+        isAdmin();
+      allow update: if isVerifiedSignedIn() &&
+        isValidId(settingId) &&
+        settingId == 'notifications' &&
+        isValidNotificationSettings(incoming()) &&
+        incoming().updatedAt == request.time &&
+        isAdmin() &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'storeName', 'defaultCurrency', 'soundEnabled',
+          'telegramEnabled', 'telegramBotToken', 'telegramChatId',
+          'whatsappEnabled', 'whatsappPhone', 'whatsappApiKey',
+          'emailEnabled', 'notificationEmail', 'webhookUrl', 'updatedAt'
+        ]);
+      allow delete: if false;
+    }
+  }
+}

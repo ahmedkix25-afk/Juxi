@@ -1,0 +1,344 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "An independent single-product COD landing page record.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120,
+          "description": "Display name of the product"
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Unique URL slug used for /p/{slug} and document ID"
+        },
+        "price": {
+          "type": "number",
+          "description": "Current selling price"
+        },
+        "originalPrice": {
+          "type": "number",
+          "description": "Original price before discount (0 if no discount)"
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16,
+          "description": "Currency symbol or label (e.g., ر.س or ج.م)"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 2000,
+          "description": "Short persuasive product description"
+        },
+        "features": {
+          "type": "array",
+          "description": "Bounded list of up to 15 product highlights"
+        },
+        "images": {
+          "type": "array",
+          "description": "Bounded list of up to 8 product image URLs"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["active", "hidden"],
+          "description": "Visibility state of the product landing page"
+        },
+        "createdBy": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "description": "UID of the admin who created this product"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last update"
+        },
+        "theme": {
+          "type": "object",
+          "description": "Optional adaptive primary and secondary hex colors for the product landing page"
+        },
+        "model3dUrl": {
+          "type": "string",
+          "maxLength": 1000,
+          "description": "Optional URL to a GLB 3D product model"
+        },
+        "countdownEndsAt": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Optional ISO timestamp for discount countdown timer"
+        },
+        "remainingStock": {
+          "type": "number",
+          "description": "Optional remaining stock count indicator (0-9999)"
+        },
+        "whatsappNumber": {
+          "type": "string",
+          "maxLength": 32,
+          "description": "Optional WhatsApp contact phone number"
+        },
+        "reviews": {
+          "type": "array",
+          "description": "Optional bounded list of up to 12 customer reviews"
+        },
+        "faqs": {
+          "type": "array",
+          "description": "Optional bounded list of up to 12 product FAQs"
+        }
+      },
+      "required": [
+        "name",
+        "slug",
+        "price",
+        "originalPrice",
+        "currency",
+        "description",
+        "features",
+        "images",
+        "status",
+        "createdBy",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "A customer Cash-on-Delivery order submitted from a product landing page.",
+      "type": "object",
+      "properties": {
+        "orderCode": {
+          "type": "string",
+          "minLength": 4,
+          "maxLength": 32,
+          "pattern": "^[A-Z0-9-]+$",
+          "description": "Human-readable unique order reference code"
+        },
+        "productSlug": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Slug reference to the ordered product"
+        },
+        "productName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 120,
+          "description": "Snapshot of the product name at order time"
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "Snapshot of the product unit price validated against product document"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "Ordered item quantity (1 to 99)"
+        },
+        "totalPrice": {
+          "type": "number",
+          "description": "Total order price equal to unitPrice * quantity"
+        },
+        "currency": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16,
+          "description": "Currency symbol or label"
+        },
+        "customerName": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Customer full name (PII)"
+        },
+        "customerPhone": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 24,
+          "description": "Customer mobile phone number (PII)"
+        },
+        "governorate": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 60,
+          "description": "Customer governorate or city"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 400,
+          "description": "Full detailed delivery address (PII)"
+        },
+        "notes": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Optional delivery notes"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "enum": ["cod"],
+          "description": "Payment method, strictly Cash on Delivery"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["new", "confirmed", "shipped", "delivered", "cancelled"],
+          "description": "Order fulfillment status"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of order creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last status update"
+        }
+      },
+      "required": [
+        "orderCode",
+        "productSlug",
+        "productName",
+        "unitPrice",
+        "quantity",
+        "totalPrice",
+        "currency",
+        "customerName",
+        "customerPhone",
+        "governorate",
+        "address",
+        "notes",
+        "paymentMethod",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AdminUser": {
+      "title": "AdminUser",
+      "description": "Authorized administrator registry entry.",
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 120,
+          "description": "Admin email address"
+        },
+        "role": {
+          "type": "string",
+          "enum": ["admin"],
+          "description": "Fixed admin role marker"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when admin access was granted"
+        }
+      },
+      "required": ["email", "role", "createdAt"]
+    },
+    "NotificationSettings": {
+      "title": "NotificationSettings",
+      "description": "Private admin notification channels and store preferences.",
+      "type": "object",
+      "properties": {
+        "storeName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
+        },
+        "defaultCurrency": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 16
+        },
+        "soundEnabled": {
+          "type": "boolean"
+        },
+        "telegramEnabled": {
+          "type": "boolean"
+        },
+        "telegramBotToken": {
+          "type": "string",
+          "maxLength": 160
+        },
+        "telegramChatId": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "whatsappEnabled": {
+          "type": "boolean"
+        },
+        "whatsappPhone": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "whatsappApiKey": {
+          "type": "string",
+          "maxLength": 200
+        },
+        "emailEnabled": {
+          "type": "boolean"
+        },
+        "notificationEmail": {
+          "type": "string",
+          "maxLength": 120
+        },
+        "webhookUrl": {
+          "type": "string",
+          "maxLength": 300
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "storeName",
+        "defaultCurrency",
+        "soundEnabled",
+        "telegramEnabled",
+        "telegramBotToken",
+        "telegramChatId",
+        "whatsappEnabled",
+        "whatsappPhone",
+        "whatsappApiKey",
+        "emailEnabled",
+        "notificationEmail",
+        "webhookUrl",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/products/{productSlug}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Product landing pages keyed by unique slug."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer COD orders containing PII, readable only by admins."
+    },
+    "/admins/{adminUid}": {
+      "schema": { "$ref": "#/entities/AdminUser" },
+      "description": "Authorized admin UID registry."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/NotificationSettings" },
+      "description": "Private admin notification settings and store defaults."
+    }
+  }
+}

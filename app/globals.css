@@ -1,0 +1,223 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+@import "tw-animate-css";
+
+@theme inline {
+  --font-sans: "Tajawal", "Cairo", "Segoe UI", Tahoma, system-ui, sans-serif;
+  --font-display: "Cairo", "Tajawal", "Segoe UI", Tahoma, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --lg-primary: #0F766E;
+  --lg-secondary: #2563EB;
+  --lg-primary-rgb: 15, 118, 110;
+  --lg-secondary-rgb: 37, 99, 235;
+
+  --lg-canvas: #F3F6FA;
+  --lg-ink: #0F172A;
+  --lg-muted: #475569;
+
+  --lg-surface: rgba(255, 255, 255, 0.72);
+  --lg-surface-strong: rgba(255, 255, 255, 0.86);
+  --lg-surface-subtle: rgba(255, 255, 255, 0.52);
+  --lg-border: rgba(255, 255, 255, 0.78);
+  --lg-border-outer: rgba(15, 23, 42, 0.08);
+  --lg-highlight: rgba(255, 255, 255, 0.92);
+  --lg-input-bg: rgba(255, 255, 255, 0.68);
+
+  --lg-shadow-outer: 0 22px 48px -24px rgba(15, 23, 42, 0.16), 0 4px 16px -6px rgba(15, 23, 42, 0.06);
+  --lg-shadow-inner: inset 0 1px 0 0 rgba(255, 255, 255, 0.9), inset 0 -1px 0 0 rgba(15, 23, 42, 0.04);
+
+  --lg-radius-card: 28px;
+  --lg-radius-panel: 24px;
+  --lg-radius-hero: 32px;
+  --lg-radius-input: 18px;
+  --lg-radius-button: 20px;
+
+  --lg-duration-fast: 300ms;
+  --lg-duration-base: 420ms;
+  --lg-duration-slow: 600ms;
+  --lg-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dark {
+  --lg-canvas: #090E1A;
+  --lg-ink: #F1F5F9;
+  --lg-muted: #94A3B8;
+
+  --lg-surface: rgba(17, 25, 40, 0.66);
+  --lg-surface-strong: rgba(22, 31, 50, 0.82);
+  --lg-surface-subtle: rgba(15, 23, 42, 0.52);
+  --lg-border: rgba(255, 255, 255, 0.14);
+  --lg-border-outer: rgba(255, 255, 255, 0.08);
+  --lg-highlight: rgba(255, 255, 255, 0.22);
+  --lg-input-bg: rgba(15, 23, 42, 0.62);
+
+  --lg-shadow-outer: 0 24px 56px -22px rgba(0, 0, 0, 0.65), 0 6px 18px -6px rgba(0, 0, 0, 0.45);
+  --lg-shadow-inner: inset 0 1px 0 0 rgba(255, 255, 255, 0.16), inset 0 -1px 0 0 rgba(0, 0, 0, 0.25);
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--lg-canvas);
+    color: var(--lg-ink);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+  }
+}
+
+@layer components {
+/* Liquid Glass Surface Architecture */
+.liquid-glass {
+  background: var(--lg-surface);
+  backdrop-filter: blur(22px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--lg-border);
+  box-shadow: var(--lg-shadow-outer), var(--lg-shadow-inner);
+  outline: 1px solid var(--lg-border-outer);
+}
+
+.liquid-glass-strong {
+  background: var(--lg-surface-strong);
+  backdrop-filter: blur(26px) saturate(190%);
+  -webkit-backdrop-filter: blur(26px) saturate(190%);
+  border: 1px solid var(--lg-border);
+  box-shadow: var(--lg-shadow-outer), var(--lg-shadow-inner);
+  outline: 1px solid var(--lg-border-outer);
+}
+
+.liquid-glass-subtle {
+  background: var(--lg-surface-subtle);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--lg-border);
+  box-shadow: var(--lg-shadow-inner);
+}
+
+/* Glass Input Field with Soft Adaptive Focus Glow */
+.liquid-input {
+  background: var(--lg-input-bg);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(148, 163, 184, 0.32);
+  border-radius: var(--lg-radius-input);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: border-color var(--lg-duration-fast) var(--lg-ease),
+    box-shadow var(--lg-duration-fast) var(--lg-ease),
+    background-color var(--lg-duration-fast) var(--lg-ease);
+}
+
+.dark .liquid-input {
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.liquid-input:focus {
+  outline: none;
+  border-color: var(--lg-primary);
+  box-shadow: 0 0 0 4px rgba(var(--lg-primary-rgb), 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* ============================================================================
+   Uniform Flat Transparent Liquid Glass Button (No 3D Top Bevel / Glare)
+   ============================================================================ */
+
+.liquid-btn-glass {
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(18px) saturate(175%);
+  -webkit-backdrop-filter: blur(18px) saturate(175%);
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  outline: 1px solid rgba(15, 23, 42, 0.09);
+  box-shadow: 0 6px 18px -12px rgba(15, 23, 42, 0.16);
+  transition:
+    transform var(--lg-duration-fast) var(--lg-ease),
+    box-shadow var(--lg-duration-fast) var(--lg-ease),
+    border-color var(--lg-duration-fast) var(--lg-ease),
+    outline-color var(--lg-duration-fast) var(--lg-ease),
+    background-color var(--lg-duration-fast) var(--lg-ease),
+    color var(--lg-duration-fast) var(--lg-ease);
+}
+
+.liquid-btn-glass:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.52);
+  border-color: rgba(255, 255, 255, 0.92);
+  outline-color: rgba(15, 23, 42, 0.14);
+  box-shadow: 0 10px 24px -12px rgba(15, 23, 42, 0.22);
+}
+
+.liquid-btn-glass:active:not(:disabled) {
+  transform: translateY(0) scale(0.975);
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 12px -8px rgba(15, 23, 42, 0.18);
+}
+
+.dark .liquid-btn-glass {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  outline: 1px solid rgba(0, 0, 0, 0.28);
+  box-shadow: 0 8px 20px -12px rgba(0, 0, 0, 0.45);
+}
+
+.dark .liquid-btn-glass:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.3);
+  outline-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 12px 26px -12px rgba(0, 0, 0, 0.55);
+}
+
+.dark .liquid-btn-glass:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .liquid-btn-glass:hover:not(:disabled),
+  .liquid-btn-glass:active:not(:disabled) {
+    transform: none;
+  }
+}
+}
+
+/* Subtle Ambient Mesh Blob Motion (Compositor Transform Only) */
+@keyframes liquidBlobDriftA {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(28px, -22px, 0) scale(1.06);
+  }
+}
+
+@keyframes liquidBlobDriftB {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-26px, 24px, 0) scale(1.05);
+  }
+}
+
+.animate-blob-slow {
+  animation: liquidBlobDriftA 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-blob-slower {
+  animation: liquidBlobDriftB 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-blob-slow,
+  .animate-blob-slower {
+    animation: none !important;
+  }
+}
