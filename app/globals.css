@@ -43,17 +43,14 @@
   /* Input Glass Surface */
   --lg-input-bg: rgba(255, 255, 255, 0.56);
 
-  /* Consistent Radii & Motion Curve */
+  /* Consistent Radii & Fast Silky Motion Curve */
   --glass-radius-card: 22px;
   --glass-radius-pill: 9999px;
   --glass-radius-input: 16px;
-  --glass-transition: 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  --glass-transition: 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 
-  /* Live Scroll & Pointer Driven Variables (updated via rAF) */
+  /* Live Scoped Header Blur & Desktop Pointer Sheen */
   --header-glass-blur: 12px;
-  --parallax-y-a: 0px;
-  --parallax-y-b: 0px;
-  --parallax-y-c: 0px;
   --glass-sheen-shift: 0%;
   --glass-sheen-y: 0%;
 }
@@ -88,10 +85,25 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     font-family: var(--font-sans);
     background-color: var(--lg-canvas);
     color: var(--lg-ink);
+    overscroll-behavior-y: none;
+  }
+
+  button,
+  a,
+  select,
+  input,
+  textarea {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
   }
 
   h1, h2, h3, h4 {
@@ -110,6 +122,7 @@
   .liquid-glass-subtle {
     position: relative;
     overflow: hidden;
+    contain: layout style;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
@@ -119,7 +132,6 @@
     transition:
       transform var(--glass-transition),
       opacity var(--glass-transition),
-      filter var(--glass-transition),
       background-color var(--glass-transition),
       border-color var(--glass-transition),
       box-shadow var(--glass-transition);
@@ -133,7 +145,7 @@
     background: var(--glass-bg-subtle);
   }
 
-  /* Subtle Diagonal Light Reflection Moving With Scroll / Pointer */
+  /* Subtle Diagonal Light Reflection (Compositor-Only — No Competing Transition Lag) */
   .glass::before,
   .liquid-glass::before,
   .liquid-glass-strong::before,
@@ -154,7 +166,6 @@
       var(--glass-sheen-y, 0%),
       0
     );
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* Ensure inner content sits above the ::before sheen */
@@ -183,13 +194,13 @@
   .glass-interactive {
     position: relative;
     overflow: hidden;
+    contain: layout style;
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
     border: 1px solid var(--glass-border);
     box-shadow: var(--glass-shadow);
     border-radius: var(--glass-radius-pill);
-    will-change: transform;
     transition:
       transform var(--glass-transition),
       opacity var(--glass-transition),
@@ -218,7 +229,6 @@
       var(--glass-sheen-y, 0%),
       0
     );
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .liquid-btn-glass > *,
@@ -227,15 +237,17 @@
     z-index: 1;
   }
 
-  .liquid-btn-glass:hover:not(:disabled),
-  .glass-interactive:hover:not(:disabled) {
-    transform: scale(1.04);
-    filter: brightness(1.06);
+  @media (hover: hover) and (pointer: fine) {
+    .liquid-btn-glass:hover:not(:disabled),
+    .glass-interactive:hover:not(:disabled) {
+      transform: scale(1.04);
+      filter: brightness(1.06);
+    }
   }
 
   .liquid-btn-glass:active:not(:disabled),
   .glass-interactive:active:not(:disabled) {
-    transform: scale(0.97);
+    transform: scale(0.96);
     filter: brightness(0.98);
   }
 
@@ -308,23 +320,21 @@
   }
 
   /* ==========================================================================
-     IntersectionObserver Scroll Reveal (Fade + TranslateY 24px + Blur 8px -> 0)
+     IntersectionObserver Scroll Reveal (Pure Compositor GPU — 120fps on Mobile)
      ========================================================================== */
   .glass-motion-ready [data-glass-reveal] {
     opacity: 0;
-    transform: translate3d(0, 24px, 0);
-    filter: blur(8px);
+    transform: translate3d(0, 18px, 0) scale(0.985);
     will-change: transform, opacity;
     transition:
-      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
-      filter 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
+      opacity 0.34s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms),
+      transform 0.34s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0ms);
   }
 
   .glass-motion-ready [data-glass-reveal][data-glass-visible="true"] {
     opacity: 1;
-    transform: translate3d(0, 0, 0);
-    filter: blur(0px);
+    transform: translate3d(0, 0, 0) scale(1);
+    will-change: auto;
   }
 }
 
@@ -344,47 +354,47 @@
 }
 
 /* ============================================================================
-   Fixed Background Blobs with Slow Scroll Parallax (Compositor Transform Only)
+   Fixed Background Blobs Ambient Drift (Parallax Handled by Outer GPU Layer)
    ============================================================================ */
 @keyframes liquidBlobDriftA {
   0%, 100% {
-    transform: translate3d(0, var(--parallax-y-a, 0px), 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(26px, calc(var(--parallax-y-a, 0px) - 20px), 0) scale(1.06);
+    transform: translate3d(24px, -18px, 0) scale(1.05);
   }
 }
 
 @keyframes liquidBlobDriftB {
   0%, 100% {
-    transform: translate3d(0, var(--parallax-y-b, 0px), 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(-24px, calc(var(--parallax-y-b, 0px) + 22px), 0) scale(1.05);
+    transform: translate3d(-22px, 20px, 0) scale(1.045);
   }
 }
 
 @keyframes liquidBlobDriftC {
   0%, 100% {
-    transform: translate3d(0, var(--parallax-y-c, 0px), 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
   50% {
-    transform: translate3d(18px, calc(var(--parallax-y-c, 0px) + 18px), 0) scale(1.04);
+    transform: translate3d(18px, 16px, 0) scale(1.04);
   }
 }
 
 .animate-blob-slow {
-  animation: liquidBlobDriftA 22s ease-in-out infinite;
+  animation: liquidBlobDriftA 18s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-blob-slower {
-  animation: liquidBlobDriftB 28s ease-in-out infinite;
+  animation: liquidBlobDriftB 24s ease-in-out infinite;
   will-change: transform;
 }
 
 .animate-blob-mid {
-  animation: liquidBlobDriftC 25s ease-in-out infinite;
+  animation: liquidBlobDriftC 21s ease-in-out infinite;
   will-change: transform;
 }
 
@@ -392,6 +402,9 @@
    Accessibility: Respect prefers-reduced-motion Strictly
    ============================================================================ */
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
   .animate-blob-slow,
   .animate-blob-slower,
   .animate-blob-mid {

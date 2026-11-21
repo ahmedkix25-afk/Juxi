@@ -24,18 +24,39 @@ export function LiquidGlassCard({
   ...rest
 }: LiquidGlassCardProps) {
   const sheenRef = useRef<HTMLDivElement>(null);
+  const sheenRafRef = useRef<number>(0);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (!interactiveSheen || lightweight || !sheenRef.current) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    sheenRef.current.style.setProperty('--mx', `${x.toFixed(1)}%`);
-    sheenRef.current.style.setProperty('--my', `${y.toFixed(1)}%`);
-    sheenRef.current.style.opacity = '1';
+    if (
+      e.pointerType !== 'mouse' ||
+      !interactiveSheen ||
+      lightweight ||
+      !sheenRef.current
+    ) {
+      return;
+    }
+    const target = e.currentTarget;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    if (sheenRafRef.current) return;
+    sheenRafRef.current = window.requestAnimationFrame(() => {
+      sheenRafRef.current = 0;
+      if (!sheenRef.current) return;
+      const rect = target.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const x = ((clientX - rect.left) / rect.width) * 100;
+      const y = ((clientY - rect.top) / rect.height) * 100;
+      sheenRef.current.style.setProperty('--mx', `${x.toFixed(1)}%`);
+      sheenRef.current.style.setProperty('--my', `${y.toFixed(1)}%`);
+      sheenRef.current.style.opacity = '1';
+    });
   };
 
   const handlePointerLeave = () => {
+    if (sheenRafRef.current) {
+      window.cancelAnimationFrame(sheenRafRef.current);
+      sheenRafRef.current = 0;
+    }
     if (!sheenRef.current) return;
     sheenRef.current.style.opacity = '0';
   };
@@ -63,7 +84,7 @@ export function LiquidGlassCard({
         <div
           ref={sheenRef}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 z-[1]"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-200 z-[1]"
           style={{
             background:
               'radial-gradient(420px circle at var(--mx, 50%) var(--my, 20%), rgba(255, 255, 255, 0.22), transparent 62%)',

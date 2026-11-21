@@ -159,7 +159,7 @@ export default function HomePage() {
               <LiquidGlassCard
                 variant="strong"
                 reveal
-                revealDelay={70}
+                revealDelay={45}
                 className="p-6 rounded-[24px] space-y-4"
               >
                 <div className="text-sm font-bold text-slate-950 dark:text-white">
@@ -236,7 +236,7 @@ export default function HomePage() {
                   key={product.slug}
                   variant="strong"
                   reveal
-                  revealDelay={index * 75}
+                  revealDelay={index * 45}
                   className="flex flex-col rounded-[24px]"
                 >
                   <div className="relative aspect-[4/3] w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-white/40 dark:border-white/10">
@@ -350,7 +350,7 @@ export default function HomePage() {
               </div>
             </LiquidGlassCard>
 
-            <LiquidGlassCard reveal revealDelay={70} dense className="p-6 rounded-[22px]">
+            <LiquidGlassCard reveal revealDelay={45} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <Bell className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
@@ -363,7 +363,7 @@ export default function HomePage() {
               </div>
             </LiquidGlassCard>
 
-            <LiquidGlassCard reveal revealDelay={140} dense className="p-6 rounded-[22px]">
+            <LiquidGlassCard reveal revealDelay={90} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <FileSpreadsheet className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
@@ -376,7 +376,7 @@ export default function HomePage() {
               </div>
             </LiquidGlassCard>
 
-            <LiquidGlassCard reveal revealDelay={210} dense className="p-6 rounded-[22px]">
+            <LiquidGlassCard reveal revealDelay={135} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <ShieldCheck className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">

@@ -27,11 +27,11 @@ export function computeHeaderScrollState(
   const blurPx = scrolled ? 24 : 12;
 
   let hidden = prevHidden;
-  if (safeY <= 56) {
+  if (safeY <= 52) {
     hidden = false;
-  } else if (delta >= 12 && safeY > 110) {
+  } else if (delta >= 10 && safeY > 96) {
     hidden = true;
-  } else if (delta <= -4) {
+  } else if (delta <= -3) {
     hidden = false;
   }
 
@@ -52,6 +52,28 @@ export function computeParallaxOffsets(scrollY: number): ParallaxOffsets {
 }
 
 /**
+ * Smoothly interpolates a current visual value toward a target value for buttery
+ * compositor-only scroll inertia, snapping cleanly once within epsilon so rAF can sleep.
+ */
+export function stepDampedValue(
+  current: number,
+  target: number,
+  factor: number = 0.24,
+  epsilon: number = 0.15,
+): { value: number; settled: boolean } {
+  const diff = target - current;
+  if (Math.abs(diff) <= epsilon) {
+    return { value: target, settled: true };
+  }
+  const clampedFactor = Math.min(1, Math.max(0.05, factor));
+  const next = current + diff * clampedFactor;
+  if (Math.abs(target - next) <= epsilon) {
+    return { value: target, settled: true };
+  }
+  return { value: Math.round(next * 100) / 100, settled: false };
+}
+
+/**
  * Computes subtle diagonal reflection shift (-14% to +14%) from scroll position.
  */
 export function computeScrollSheenShift(scrollY: number): number {
@@ -60,12 +82,13 @@ export function computeScrollSheenShift(scrollY: number): number {
 }
 
 /**
- * Computes staggered reveal delay (60–80ms per adjacent sibling, capped at 360ms).
+ * Computes brisk staggered reveal delay (45ms per adjacent sibling, capped at 180ms)
+ * so fast mobile scrolling feels immediate and fluid without blank gaps.
  */
 export function computeStaggerDelayMs(
   index: number,
-  stepMs: number = 70,
-  maxMs: number = 350,
+  stepMs: number = 45,
+  maxMs: number = 180,
 ): number {
   if (index <= 0) return 0;
   return Math.min(maxMs, Math.round(index * stepMs));

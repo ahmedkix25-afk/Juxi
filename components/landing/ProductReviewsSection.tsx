@@ -62,7 +62,7 @@ export function ProductReviewsSection({
               key={review.id}
               dense
               reveal={!lightweight}
-              revealDelay={idx * 70}
+              revealDelay={idx * 45}
               lightweight={lightweight}
               className="p-5 flex flex-col justify-between gap-4 rounded-[22px]"
             >

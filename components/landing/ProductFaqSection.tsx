@@ -51,7 +51,7 @@ export function ProductFaqSection({
                 key={item.id}
                 dense
                 reveal={!lightweight}
-                revealDelay={idx * 65}
+                revealDelay={idx * 40}
                 lightweight={lightweight}
                 interactiveSheen={false}
                 className="rounded-[20px]"
@@ -67,7 +67,7 @@ export function ProductFaqSection({
                     {item.question}
                   </span>
                   <ChevronDown
-                    className={`w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0 transition-transform duration-300 ${
+                    className={`w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0 transition-transform duration-200 ${
                       isOpen ? 'rotate-180 text-[var(--lg-primary)]' : ''
                     }`}
                   />

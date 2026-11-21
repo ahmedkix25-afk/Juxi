@@ -12,15 +12,15 @@ export const DESIGN_TOKENS = {
     button: '20px',
   },
   motion: {
-    fastMs: 300,
-    baseMs: 420,
-    slowMs: 600,
+    fastMs: 180,
+    baseMs: 260,
+    slowMs: 380,
     ease: [0.22, 1, 0.36, 1] as const,
     spring: {
       type: 'spring' as const,
-      stiffness: 320,
-      damping: 26,
-      mass: 0.85,
+      stiffness: 420,
+      damping: 30,
+      mass: 0.72,
     },
   },
   spacing: {

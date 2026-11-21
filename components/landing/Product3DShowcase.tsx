@@ -55,6 +55,7 @@ export function Product3DShowcase({
   const cardRef = useRef<HTMLDivElement>(null);
   const shadowRef = useRef<HTMLDivElement>(null);
   const glossRef = useRef<HTMLDivElement>(null);
+  const tiltRafRef = useRef<number>(0);
 
   const safeIndex =
     activeIndex >= validImages.length ? 0 : Math.max(0, activeIndex);
@@ -63,45 +64,69 @@ export function Product3DShowcase({
   const canUseWebGL = hasGlbModel && supportsWebGL2 && !lightweight;
   const showModeSwitcher = canUseWebGL && validImages.length > 0;
 
-  // Optional gentle mobile device-tilt parallax on supported browsers
+  // Optional gentle mobile device-tilt parallax throttled to display refresh rate (rAF)
   useEffect(() => {
     if (lightweight || viewMode !== 'card3d' || typeof window === 'undefined') {
       return;
     }
+    let orientRaf = 0;
+    let lastRx = 0;
+    let lastRy = 0;
+
     const handleOrientation = (event: DeviceOrientationEvent) => {
       if (event.gamma === null || event.beta === null || !cardRef.current) return;
-      const rx = Math.max(-7, Math.min(7, (event.beta - 45) * 0.14));
-      const ry = Math.max(-8, Math.min(8, event.gamma * 0.18));
-      cardRef.current.style.transform = `perspective(1100px) rotateX(${(-rx).toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) translateZ(0)`;
+      lastRx = Math.max(-7, Math.min(7, (event.beta - 45) * 0.14));
+      lastRy = Math.max(-8, Math.min(8, event.gamma * 0.18));
+      if (orientRaf) return;
+      orientRaf = window.requestAnimationFrame(() => {
+        orientRaf = 0;
+        if (!cardRef.current) return;
+        cardRef.current.style.transform = `perspective(1100px) rotateX(${(-lastRx).toFixed(2)}deg) rotateY(${lastRy.toFixed(2)}deg) translateZ(0)`;
+      });
     };
     window.addEventListener('deviceorientation', handleOrientation, {
       passive: true,
     });
     return () => {
       window.removeEventListener('deviceorientation', handleOrientation);
+      if (orientRaf) window.cancelAnimationFrame(orientRaf);
     };
   }, [lightweight, viewMode]);
 
   const handleTiltMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (lightweight || !cardRef.current) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const px = (e.clientX - rect.left) / rect.width - 0.5;
-    const py = (e.clientY - rect.top) / rect.height - 0.5;
-    const rotateY = px * 13;
-    const rotateX = -py * 10;
+    if (e.pointerType === 'touch' || lightweight || !cardRef.current) return;
+    const target = e.currentTarget;
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    if (tiltRafRef.current) return;
 
-    cardRef.current.style.transform = `perspective(1100px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
+    tiltRafRef.current = window.requestAnimationFrame(() => {
+      tiltRafRef.current = 0;
+      if (!cardRef.current) return;
+      const rect = target.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const px = (clientX - rect.left) / rect.width - 0.5;
+      const py = (clientY - rect.top) / rect.height - 0.5;
+      const rotateY = px * 13;
+      const rotateX = -py * 10;
 
-    if (shadowRef.current) {
-      shadowRef.current.style.transform = `translate3d(${(-px * 22).toFixed(1)}px, ${(12 - py * 10).toFixed(1)}px, 0) scale(0.95)`;
-    }
-    if (glossRef.current) {
-      glossRef.current.style.opacity = '1';
-      glossRef.current.style.background = `radial-gradient(420px circle at ${((px + 0.5) * 100).toFixed(1)}% ${((py + 0.5) * 100).toFixed(1)}%, rgba(255,255,255,0.34), transparent 58%)`;
-    }
+      cardRef.current.style.transform = `perspective(1100px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`;
+
+      if (shadowRef.current) {
+        shadowRef.current.style.transform = `translate3d(${(-px * 22).toFixed(1)}px, ${(12 - py * 10).toFixed(1)}px, 0) scale(0.95)`;
+      }
+      if (glossRef.current) {
+        glossRef.current.style.opacity = '1';
+        glossRef.current.style.background = `radial-gradient(420px circle at ${((px + 0.5) * 100).toFixed(1)}% ${((py + 0.5) * 100).toFixed(1)}%, rgba(255,255,255,0.34), transparent 58%)`;
+      }
+    });
   };
 
   const handleTiltLeave = () => {
+    if (tiltRafRef.current) {
+      window.cancelAnimationFrame(tiltRafRef.current);
+      tiltRafRef.current = 0;
+    }
     if (cardRef.current) {
       cardRef.current.style.transform =
         'perspective(1100px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
@@ -203,7 +228,7 @@ export function Product3DShowcase({
             <div
               ref={shadowRef}
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-3 inset-x-8 h-10 rounded-full blur-2xl opacity-35 dark:opacity-55 transition-transform duration-500 ease-out"
+              className="pointer-events-none absolute -bottom-3 inset-x-8 h-10 rounded-full blur-2xl opacity-35 dark:opacity-55 transition-transform duration-300 ease-out"
               style={{
                 background:
                   'radial-gradient(ellipse at center, rgba(15, 23, 42, 0.55) 0%, transparent 72%)',
@@ -215,7 +240,7 @@ export function Product3DShowcase({
           {/* Multi-layer 3D Parallax Card */}
           <div
             ref={cardRef}
-            className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] liquid-glass-strong transition-transform duration-500 ease-out"
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] liquid-glass-strong transition-transform duration-300 ease-out"
             style={{ transformStyle: 'preserve-3d' }}
           >
             {currentUrl && !failedUrls[currentUrl] ? (
