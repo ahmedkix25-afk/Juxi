@@ -120,39 +120,41 @@ export default function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-      <LiquidGlassCard variant="strong" className="p-6 rounded-[28px]">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-0.5">
-            <h2 className="text-xl font-bold text-slate-950 dark:text-white">
-              إدارة الطلبات
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              تحديث فوري للطلبات الواردة، تغيير الحالة، وتصدير التقارير بصيغة
-              Excel
-            </p>
-          </div>
-
-          <LiquidButton
-            type="button"
-            disabled={filteredOrders.length === 0}
-            onClick={handleExportExcel}
-            className="h-11 px-5 text-sm whitespace-nowrap"
-          >
-            <Download className="w-4 h-4" />
-            <span>تصدير Excel ({filteredOrders.length})</span>
-          </LiquidButton>
+      {/* Open Header Layout — No Wrapping Box */}
+      <div
+        data-glass-reveal=""
+        className="flex flex-wrap items-center justify-between gap-4 pt-1"
+      >
+        <div className="space-y-0.5">
+          <h2 className="text-xl font-bold text-slate-950 dark:text-white glass-text-shadow">
+            إدارة الطلبات
+          </h2>
+          <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
+            تحديث فوري للطلبات الواردة، تغيير الحالة، وتصدير التقارير بصيغة
+            Excel
+          </p>
         </div>
-      </LiquidGlassCard>
 
-      {/* Glass Status Segmented Tabs */}
-      <div className="flex flex-wrap items-center gap-1.5 p-1.5 liquid-glass-subtle rounded-full w-fit">
+        <LiquidButton
+          type="button"
+          disabled={filteredOrders.length === 0}
+          onClick={handleExportExcel}
+          className="h-11 px-5 text-sm whitespace-nowrap"
+        >
+          <Download className="w-4 h-4" />
+          <span>تصدير Excel ({filteredOrders.length})</span>
+        </LiquidButton>
+      </div>
+
+      {/* Individual Glass Status Tabs (No Outer Wrapper Box) */}
+      <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
           onClick={() => setFilters((prev) => ({ ...prev, status: 'all' }))}
-          className={`px-4 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 text-xs font-semibold rounded-full cursor-pointer whitespace-nowrap ${
             filters.status === 'all'
-              ? 'liquid-btn-glass text-slate-950 dark:text-white'
-              : 'text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-white/10 hover:text-slate-950 dark:hover:text-white'
+              ? 'liquid-btn-glass text-slate-950 dark:text-white ring-1 ring-[var(--lg-primary)]/40'
+              : 'glass-interactive text-slate-700 dark:text-slate-300 opacity-80 hover:opacity-100'
           }`}
         >
           <span>الكل ({orders.length})</span>
@@ -164,10 +166,10 @@ export default function AdminOrdersPage() {
               key={st}
               type="button"
               onClick={() => setFilters((prev) => ({ ...prev, status: st }))}
-              className={`px-4 py-2 text-xs font-semibold rounded-full transition-all cursor-pointer whitespace-nowrap ${
+              className={`px-4 py-2 text-xs font-semibold rounded-full cursor-pointer whitespace-nowrap ${
                 filters.status === st
-                  ? 'liquid-btn-glass text-slate-950 dark:text-white'
-                  : 'text-slate-600 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-white/10 hover:text-slate-950 dark:hover:text-white'
+                  ? 'liquid-btn-glass text-slate-950 dark:text-white ring-1 ring-[var(--lg-primary)]/40'
+                  : 'glass-interactive text-slate-700 dark:text-slate-300 opacity-80 hover:opacity-100'
               }`}
             >
               <span>
@@ -178,76 +180,74 @@ export default function AdminOrdersPage() {
         })}
       </div>
 
-      {/* Liquid Glass Filters Toolbar */}
-      <LiquidGlassCard className="p-4 rounded-[24px]">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <div className="relative lg:col-span-2">
-            <Search className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-            <input
-              type="search"
-              value={filters.searchQuery}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))
-              }
-              placeholder="بحث بالاسم، الهاتف، أو رقم الطلب..."
-              aria-label="بحث في الطلبات"
-              className="liquid-input w-full h-11 pr-10 pl-3.5 rounded-[16px] text-sm text-slate-950 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500"
-            />
-          </div>
-
-          <select
-            aria-label="تصفية حسب المنتج"
-            value={filters.productSlug}
+      {/* Individual Glass Filter Inputs (Pure Grid Layout — No Wrapping Toolbar Box) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="relative lg:col-span-2">
+          <Search className="w-4 h-4 text-slate-500 dark:text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
+          <input
+            type="search"
+            value={filters.searchQuery}
             onChange={(e) =>
-              setFilters((prev) => ({ ...prev, productSlug: e.target.value }))
+              setFilters((prev) => ({ ...prev, searchQuery: e.target.value }))
             }
-            className="liquid-input h-11 px-3.5 rounded-[16px] text-sm text-slate-950 dark:text-white dark:bg-slate-900/90"
-          >
-            <option value="all">جميع المنتجات</option>
-            {productOptions.map(([slug, name]) => (
-              <option key={slug} value={slug}>
-                {name}
-              </option>
-            ))}
-          </select>
+            placeholder="بحث بالاسم، الهاتف، أو رقم الطلب..."
+            aria-label="بحث في الطلبات"
+            className="liquid-input w-full h-11 pr-10 pl-3.5 rounded-[16px] text-sm text-slate-950 dark:text-white placeholder:text-slate-500 dark:placeholder:text-slate-400"
+          />
+        </div>
 
+        <select
+          aria-label="تصفية حسب المنتج"
+          value={filters.productSlug}
+          onChange={(e) =>
+            setFilters((prev) => ({ ...prev, productSlug: e.target.value }))
+          }
+          className="liquid-input h-11 px-3.5 rounded-[16px] text-sm text-slate-950 dark:text-white dark:bg-slate-900/80"
+        >
+          <option value="all">جميع المنتجات</option>
+          {productOptions.map(([slug, name]) => (
+            <option key={slug} value={slug}>
+              {name}
+            </option>
+          ))}
+        </select>
+
+        <input
+          type="date"
+          aria-label="من تاريخ"
+          value={filters.dateFrom}
+          onChange={(e) =>
+            setFilters((prev) => ({ ...prev, dateFrom: e.target.value }))
+          }
+          className="liquid-input h-11 px-3.5 rounded-[16px] text-sm font-mono text-slate-950 dark:text-white"
+        />
+
+        <div className="flex items-center gap-2">
           <input
             type="date"
-            aria-label="من تاريخ"
-            value={filters.dateFrom}
+            aria-label="إلى تاريخ"
+            value={filters.dateTo}
             onChange={(e) =>
-              setFilters((prev) => ({ ...prev, dateFrom: e.target.value }))
+              setFilters((prev) => ({ ...prev, dateTo: e.target.value }))
             }
-            className="liquid-input h-11 px-3.5 rounded-[16px] text-sm font-mono text-slate-950 dark:text-white"
+            className="liquid-input flex-1 min-w-0 h-11 px-3.5 rounded-[16px] text-sm font-mono text-slate-950 dark:text-white"
           />
-
-          <div className="flex items-center gap-2">
-            <input
-              type="date"
-              aria-label="إلى تاريخ"
-              value={filters.dateTo}
-              onChange={(e) =>
-                setFilters((prev) => ({ ...prev, dateTo: e.target.value }))
-              }
-              className="liquid-input flex-1 min-w-0 h-11 px-3.5 rounded-[16px] text-sm font-mono text-slate-950 dark:text-white"
-            />
-            {hasActiveFilters && (
-              <button
-                type="button"
-                onClick={() => setFilters(INITIAL_FILTERS)}
-                aria-label="إعادة تعيين الفلاتر"
-                title="مسح الفلاتر"
-                className="h-11 w-11 shrink-0 rounded-full liquid-btn-glass text-slate-700 dark:text-slate-100 inline-flex items-center justify-center cursor-pointer"
-              >
-                <RotateCcw className="w-4 h-4" />
-              </button>
-            )}
-          </div>
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={() => setFilters(INITIAL_FILTERS)}
+              aria-label="إعادة تعيين الفلاتر"
+              title="مسح الفلاتر"
+              className="h-11 w-11 shrink-0 rounded-full liquid-btn-glass text-slate-700 dark:text-slate-100 inline-flex items-center justify-center cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4" />
+            </button>
+          )}
         </div>
-      </LiquidGlassCard>
+      </div>
 
-      {/* Orders Table */}
-      <LiquidGlassCard variant="strong" className="rounded-[28px]">
+      {/* Orders Table (Dense Blur for Long Lists) */}
+      <LiquidGlassCard variant="strong" dense reveal className="rounded-[24px]">
         {loadingOrders ? (
           <div className="p-10 text-center text-sm text-slate-500 dark:text-slate-400">
             جاري تحميل الطلبات...

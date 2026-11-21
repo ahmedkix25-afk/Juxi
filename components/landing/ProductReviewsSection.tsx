@@ -35,33 +35,36 @@ export function ProductReviewsSection({
           <div className="space-y-1">
             <h2
               id="reviews-heading"
-              className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white"
+              className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white glass-text-shadow"
             >
               آراء وتجارب العملاء
             </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-400">
+            <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
               تقييمات حقيقية من عملاء استلموا المنتج وعاينوه قبل الدفع
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200">
+          <div className="flex items-center gap-2 text-sm text-slate-800 dark:text-slate-100 glass-text-shadow">
             <Star className="w-4 h-4 fill-amber-400 text-amber-400" />
             <span className="font-mono font-bold tabular-nums">{avgRating}</span>
-            <span aria-hidden="true" className="text-slate-300 dark:text-slate-600">
+            <span aria-hidden="true" className="text-slate-400 dark:text-slate-500">
               ·
             </span>
-            <span className="text-slate-500 dark:text-slate-400">
+            <span className="text-slate-600 dark:text-slate-300">
               {reviews.length} تقييمات
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {reviews.map((review) => (
+          {reviews.map((review, idx) => (
             <LiquidGlassCard
               key={review.id}
+              dense
+              reveal={!lightweight}
+              revealDelay={idx * 70}
               lightweight={lightweight}
-              className="p-5 flex flex-col justify-between gap-4"
+              className="p-5 flex flex-col justify-between gap-4 rounded-[22px]"
             >
               <div className="space-y-3">
                 <div className="flex items-center justify-between gap-2">

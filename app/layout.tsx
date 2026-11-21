@@ -3,6 +3,7 @@ import './globals.css';
 import { FirebaseProvider } from '@/components/FirebaseProvider';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { LiquidGlassMotionProvider } from '@/components/LiquidGlassMotionProvider';
 
 export const metadata: Metadata = {
   title: 'صفحة بيع — نظام صفحات الهبوط للمنتجات',
@@ -47,7 +48,9 @@ export default function RootLayout({
       >
         <ErrorBoundary>
           <ThemeProvider>
-            <FirebaseProvider>{children}</FirebaseProvider>
+            <FirebaseProvider>
+              <LiquidGlassMotionProvider>{children}</LiquidGlassMotionProvider>
+            </FirebaseProvider>
           </ThemeProvider>
         </ErrorBoundary>
       </body>

@@ -83,15 +83,15 @@ export function MobileStickyOrderBar({
   return (
     <div
       data-testid="mobile-sticky-order-bar"
-      className="fixed bottom-0 inset-x-0 z-40 lg:hidden px-3 pb-3 pt-2 pointer-events-none"
+      className="fixed bottom-0 inset-x-0 z-40 lg:hidden px-4 pb-3.5 pt-2 pointer-events-none"
     >
-      <div className="pointer-events-auto liquid-glass-strong rounded-[22px] px-4 h-[60px] flex items-center justify-between gap-3">
-        <div className="min-w-0 leading-tight">
-          <div className="text-base font-bold text-[var(--lg-primary)] tabular-nums truncate">
+      <div className="flex items-center justify-between gap-3">
+        <div className="pointer-events-auto glass liquid-glass-strong rounded-full px-4 py-2 min-w-0 leading-tight">
+          <div className="text-sm sm:text-base font-bold text-[var(--lg-primary)] tabular-nums truncate">
             {formatPrice(price, currency)}
           </div>
           {originalPrice > price && (
-            <div className="text-[11px] text-slate-400 line-through tabular-nums">
+            <div className="text-[11px] text-slate-500 dark:text-slate-400 line-through tabular-nums">
               {formatPrice(originalPrice, currency)}
             </div>
           )}
@@ -101,7 +101,7 @@ export function MobileStickyOrderBar({
           type="button"
           reducedMotion={lightweight}
           onClick={scrollToForm}
-          className="h-10 px-5 text-sm shrink-0 whitespace-nowrap"
+          className="pointer-events-auto h-11 px-5 text-sm shrink-0 whitespace-nowrap"
         >
           <span>اطلب الآن</span>
           <ArrowDown className="w-4 h-4" />

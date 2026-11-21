@@ -144,10 +144,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             key={item.href}
             href={item.href}
             onClick={onNavigate}
-            className={`flex items-center justify-between gap-3 px-4 py-3 rounded-full text-sm font-semibold transition-all duration-300 whitespace-nowrap ${
+            className={`flex items-center justify-between gap-3 px-4 py-3 rounded-full text-sm font-semibold whitespace-nowrap ${
               active
                 ? 'liquid-btn-glass text-slate-950 dark:text-white'
-                : 'text-slate-700 dark:text-slate-300 hover:bg-white/40 dark:hover:bg-white/10 hover:text-slate-950 dark:hover:text-white'
+                : 'glass-interactive text-slate-800 dark:text-slate-200 opacity-85 hover:opacity-100'
             }`}
           >
             <span className="flex items-center gap-3">
@@ -157,11 +157,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             {showCounter && (
               <span
                 data-testid="sidebar-new-orders-count"
-                className={`min-w-6 h-5 px-1.5 rounded-full text-xs font-mono font-bold tabular-nums flex items-center justify-center ${
-                  active
-                    ? 'bg-slate-950/10 dark:bg-white/20 text-slate-950 dark:text-white'
-                    : 'bg-slate-950/10 dark:bg-white/15 text-slate-900 dark:text-white'
-                }`}
+                className="min-w-6 h-5 px-1.5 rounded-full text-xs font-mono font-bold tabular-nums flex items-center justify-center bg-slate-950/10 dark:bg-white/20 text-slate-950 dark:text-white"
               >
                 {newOrdersCount}
               </span>
@@ -176,31 +172,31 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     <div className="relative min-h-screen flex text-slate-900 dark:text-slate-100 overflow-x-clip">
       <MeshGradientBackdrop />
 
-      {/* Desktop Floating Liquid Glass Sidebar */}
-      <aside className="hidden lg:flex lg:flex-col lg:w-72 lg:shrink-0 sticky top-0 h-screen p-4">
-        <div className="liquid-glass-strong rounded-[28px] flex flex-col h-full overflow-hidden">
-          <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200/60 dark:border-white/10">
+      {/* Desktop Open-Layout Sidebar — No Large Container Box; Each Item Floats Individually */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-68 lg:shrink-0 sticky top-0 h-screen p-4">
+        <div className="flex flex-col h-full">
+          <div className="h-14 px-2 flex items-center justify-between gap-2">
             <Link
               href="/admin"
-              className="text-lg font-bold text-slate-950 dark:text-white tracking-tight whitespace-nowrap"
+              className="h-10 px-4 rounded-full glass-interactive inline-flex items-center text-base font-bold text-slate-950 dark:text-white tracking-tight whitespace-nowrap"
             >
-              صفحة بيع
+              <span>صفحة بيع</span>
             </Link>
             <Link
               href="/"
               title="العودة للرئيسية"
               aria-label="العودة للصفحة الرئيسية"
-              className="w-9 h-9 rounded-full liquid-btn-glass text-slate-700 dark:text-slate-200 flex items-center justify-center"
+              className="w-10 h-10 rounded-full liquid-btn-glass text-slate-700 dark:text-slate-200 flex items-center justify-center"
             >
               <Home className="w-4 h-4" />
             </Link>
           </div>
 
-          <div className="flex-1 p-3.5 overflow-y-auto">{renderNavLinks()}</div>
+          <div className="flex-1 py-4 px-1 overflow-y-auto">{renderNavLinks()}</div>
 
-          <div className="p-4 border-t border-slate-200/60 dark:border-white/10 space-y-3">
+          <div className="pt-3 px-1 space-y-2.5">
             <div
-              className="text-xs text-slate-500 dark:text-slate-400 truncate px-1"
+              className="text-xs text-slate-600 dark:text-slate-300 truncate px-2 glass-text-shadow"
               dir="ltr"
             >
               {user.email}
@@ -220,7 +216,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
-      {/* Mobile Liquid Glass Drawer */}
+      {/* Mobile Liquid Glass Drawer (Modal Surface) */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden flex">
@@ -241,8 +237,8 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               }}
               className="relative z-10 w-72 max-w-[84vw] p-3 h-full flex"
             >
-              <div className="liquid-glass-strong rounded-[28px] w-full h-full flex flex-col overflow-hidden">
-                <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200/60 dark:border-white/10">
+              <div className="glass liquid-glass-strong rounded-[24px] w-full h-full flex flex-col overflow-hidden">
+                <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200/50 dark:border-white/10">
                   <span className="text-lg font-bold text-slate-950 dark:text-white">
                     صفحة بيع
                   </span>
@@ -258,7 +254,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 <div className="flex-1 p-3.5 overflow-y-auto">
                   {renderNavLinks(() => setMobileMenuOpen(false))}
                 </div>
-                <div className="p-4 border-t border-slate-200/60 dark:border-white/10 space-y-3">
+                <div className="p-4 border-t border-slate-200/50 dark:border-white/10 space-y-3">
                   <div
                     className="text-xs text-slate-500 dark:text-slate-400 truncate"
                     dir="ltr"
@@ -285,9 +281,12 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
 
       {/* Main Content Area */}
       <div className="flex-1 min-w-0 flex flex-col">
-        {/* Floating Liquid Glass Top Header */}
-        <header className="sticky top-0 z-30 px-4 sm:px-6 pt-3 sm:pt-4">
-          <div className="max-w-[1400px] mx-auto liquid-glass-strong rounded-[24px] h-16 px-4 sm:px-5 flex items-center justify-between gap-4">
+        {/* Scroll-Aware Floating Top Header — Pure Layout Only (No Large Bar Wrapper) */}
+        <header
+          data-scroll-header=""
+          className="sticky top-0 z-40 px-4 sm:px-6 lg:px-8 py-3.5"
+        >
+          <div className="max-w-[1400px] mx-auto flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <button
                 type="button"
@@ -297,7 +296,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               >
                 <Menu className="w-5 h-5" />
               </button>
-              <h1 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white truncate">
+              <h1 className="text-base sm:text-lg font-bold text-slate-950 dark:text-white truncate glass-text-shadow">
                 {activeNav.label}
               </h1>
             </div>

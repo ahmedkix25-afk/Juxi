@@ -5,6 +5,9 @@ import React, { useRef } from 'react';
 interface LiquidGlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   variant?: 'default' | 'strong' | 'subtle';
+  dense?: boolean;
+  reveal?: boolean;
+  revealDelay?: number;
   interactiveSheen?: boolean;
   lightweight?: boolean;
 }
@@ -13,6 +16,9 @@ export function LiquidGlassCard({
   children,
   className = '',
   variant = 'default',
+  dense = false,
+  reveal = false,
+  revealDelay,
   interactiveSheen = true,
   lightweight = false,
   ...rest
@@ -36,33 +42,31 @@ export function LiquidGlassCard({
 
   const surfaceClass =
     variant === 'strong'
-      ? 'liquid-glass-strong'
+      ? 'glass liquid-glass-strong'
       : variant === 'subtle'
-        ? 'liquid-glass-subtle'
-        : 'liquid-glass';
+        ? 'glass liquid-glass-subtle'
+        : 'glass';
 
   return (
     <div
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className={`relative overflow-hidden rounded-[28px] transition-colors duration-300 ${surfaceClass} ${className}`}
+      data-glass-reveal={reveal ? '' : undefined}
+      data-glass-delay={
+        reveal && typeof revealDelay === 'number' ? String(revealDelay) : undefined
+      }
+      className={`rounded-[22px] ${surfaceClass} ${dense ? 'glass-dense' : ''} ${className}`}
       {...rest}
     >
-      {/* Soft top edge light refraction */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-l from-transparent via-white/80 dark:via-white/30 to-transparent"
-      />
-
       {/* Dynamic pointer-reactive reflective specular sheen */}
       {interactiveSheen && !lightweight && (
         <div
           ref={sheenRef}
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500"
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 z-[1]"
           style={{
             background:
-              'radial-gradient(460px circle at var(--mx, 50%) var(--my, 20%), rgba(255, 255, 255, 0.24), transparent 62%)',
+              'radial-gradient(420px circle at var(--mx, 50%) var(--my, 20%), rgba(255, 255, 255, 0.22), transparent 62%)',
           }}
         />
       )}

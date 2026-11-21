@@ -134,25 +134,23 @@ export default function AdminSettingsPage() {
 
   return (
     <div className="max-w-3xl space-y-6">
-      <LiquidGlassCard variant="strong" className="p-6 rounded-[28px]">
-        <div className="space-y-0.5">
-          <h2 className="text-xl font-bold text-slate-950 dark:text-white">
-            إعدادات الإشعارات والمتجر
-          </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-300">
-            تحكم في تنبيهات لوحة التحكم وربط Telegram و WhatsApp والبريد
-            الإلكتروني
-          </p>
-        </div>
-      </LiquidGlassCard>
+      <div data-glass-reveal="" className="space-y-0.5 pt-1">
+        <h2 className="text-xl font-bold text-slate-950 dark:text-white glass-text-shadow">
+          إعدادات الإشعارات والمتجر
+        </h2>
+        <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
+          تحكم في تنبيهات لوحة التحكم وربط Telegram و WhatsApp والبريد
+          الإلكتروني
+        </p>
+      </div>
 
       {feedback && (
         <div
           role="status"
-          className={`p-4 rounded-[20px] border text-sm flex items-start gap-2.5 ${
+          className={`p-4 rounded-[20px] glass border text-sm flex items-start gap-2.5 ${
             feedback.type === 'success'
-              ? 'bg-emerald-500/12 dark:bg-emerald-500/20 border-emerald-500/30 text-emerald-900 dark:text-emerald-200'
-              : 'bg-red-500/12 dark:bg-red-500/20 border-red-500/30 text-red-700 dark:text-red-200'
+              ? 'border-emerald-500/40 text-emerald-900 dark:text-emerald-200'
+              : 'border-red-500/40 text-red-700 dark:text-red-200'
           }`}
         >
           {feedback.type === 'success' ? (
@@ -164,7 +162,7 @@ export default function AdminSettingsPage() {
         </div>
       )}
 
-      <LiquidGlassCard variant="strong" className="p-6 sm:p-7 rounded-[28px]">
+      <LiquidGlassCard variant="strong" reveal className="p-6 sm:p-7 rounded-[24px]">
         <form onSubmit={handleSave} className="space-y-6">
           {/* General Store Defaults */}
           <div className="space-y-4">

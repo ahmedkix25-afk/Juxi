@@ -33,25 +33,28 @@ export function ProductFaqSection({
         <div className="space-y-1">
           <h2
             id="faq-heading"
-            className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white"
+            className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white glass-text-shadow"
           >
             الأسئلة الشائعة
           </h2>
-          <p className="text-sm text-slate-600 dark:text-slate-400">
+          <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
             إجابات واضحة حول الشحن، المعاينة، والضمان قبل تأكيد طلبك
           </p>
         </div>
 
         <div className="space-y-3">
-          {faqs.map((item) => {
+          {faqs.map((item, idx) => {
             const isOpen = openId === item.id;
             const panelId = `faq-panel-${item.id}`;
             return (
               <LiquidGlassCard
                 key={item.id}
+                dense
+                reveal={!lightweight}
+                revealDelay={idx * 65}
                 lightweight={lightweight}
                 interactiveSheen={false}
-                className="rounded-[24px]"
+                className="rounded-[20px]"
               >
                 <button
                   type="button"

@@ -146,42 +146,40 @@ export function Product3DShowcase({
     <div className="space-y-4" data-testid="product-image-slider">
       {/* Mode Switcher Bar only when an actual GLB 3D model is uploaded */}
       {showModeSwitcher && (
-        <div className="flex items-center justify-between gap-3">
-          <div
-            className="inline-flex items-center gap-1 p-1 rounded-full liquid-glass-subtle"
-            role="tablist"
-            aria-label="وضع عرض المنتج"
+        <div
+          className="flex items-center gap-2"
+          role="tablist"
+          aria-label="وضع عرض المنتج"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={viewMode === 'card3d'}
+            onClick={() => setViewMode('card3d')}
+            className={`h-9 px-4 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              viewMode === 'card3d'
+                ? 'liquid-btn-glass text-slate-950 dark:text-white ring-1 ring-[var(--lg-primary)]/40'
+                : 'glass-interactive text-slate-700 dark:text-slate-300 opacity-80 hover:opacity-100'
+            }`}
           >
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewMode === 'card3d'}
-              onClick={() => setViewMode('card3d')}
-              className={`h-8 px-3.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                viewMode === 'card3d'
-                  ? 'liquid-btn-glass text-slate-950 dark:text-white'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Images className="w-3.5 h-3.5" />
-              صور المنتج
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={viewMode === 'webgl3d'}
-              data-testid="toggle-webgl-3d"
-              onClick={() => setViewMode('webgl3d')}
-              className={`h-8 px-3.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 transition-all duration-300 cursor-pointer whitespace-nowrap ${
-                viewMode === 'webgl3d'
-                  ? 'liquid-btn-glass text-slate-950 dark:text-white'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              <Box className="w-3.5 h-3.5" />
-              مجسم 3D (GLB)
-            </button>
-          </div>
+            <Images className="w-3.5 h-3.5" />
+            <span>صور المنتج</span>
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={viewMode === 'webgl3d'}
+            data-testid="toggle-webgl-3d"
+            onClick={() => setViewMode('webgl3d')}
+            className={`h-9 px-4 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
+              viewMode === 'webgl3d'
+                ? 'liquid-btn-glass text-slate-950 dark:text-white ring-1 ring-[var(--lg-primary)]/40'
+                : 'glass-interactive text-slate-700 dark:text-slate-300 opacity-80 hover:opacity-100'
+            }`}
+          >
+            <Box className="w-3.5 h-3.5" />
+            <span>مجسم 3D (GLB)</span>
+          </button>
         </div>
       )}
 

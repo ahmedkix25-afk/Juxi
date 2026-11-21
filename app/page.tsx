@@ -54,43 +54,46 @@ export default function HomePage() {
     <div className="relative min-h-screen text-slate-900 dark:text-slate-100 flex flex-col overflow-x-clip">
       <MeshGradientBackdrop />
 
-      {/* Clean 3-Zone Liquid Glass Header (Portal Only — Customer /p/[slug] pages have ZERO nav/footer) */}
-      <header className="sticky top-0 z-20 px-4 pt-3">
-        <div className="max-w-6xl mx-auto liquid-glass-strong rounded-[24px] px-4 sm:px-6 h-16 flex items-center justify-between gap-6">
+      {/* Scroll-Aware Floating Header — Pure Layout Only (No Large Wrapper Box; Each Control Has Its Own Glass) */}
+      <header
+        data-scroll-header=""
+        className="sticky top-0 z-40 px-4 sm:px-6 py-3.5"
+      >
+        <div className="max-w-6xl mx-auto flex items-center justify-between gap-6">
           <Link
             href="/"
-            className="text-lg font-bold tracking-tight text-slate-950 dark:text-white whitespace-nowrap shrink-0"
+            className="h-10 px-4 rounded-full glass-interactive inline-flex items-center text-base sm:text-lg font-bold tracking-tight text-slate-950 dark:text-white whitespace-nowrap shrink-0"
           >
-            صفحة بيع
+            <span>صفحة بيع</span>
           </Link>
 
           <nav
             aria-label="التنقل الرئيسي"
-            className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600 dark:text-slate-300"
+            className="hidden md:flex items-center gap-2.5 text-sm font-medium text-slate-800 dark:text-slate-100"
           >
             <a
               href="#live-pages"
-              className="hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap shrink-0"
+              className="h-9 px-4 rounded-full glass-interactive inline-flex items-center hover:text-slate-950 dark:hover:text-white whitespace-nowrap shrink-0"
             >
-              صفحات المعاينة
+              <span>صفحات المعاينة</span>
             </a>
             <a
               href="#capabilities"
-              className="hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap shrink-0"
+              className="h-9 px-4 rounded-full glass-interactive inline-flex items-center hover:text-slate-950 dark:hover:text-white whitespace-nowrap shrink-0"
             >
-              مميزات النظام
+              <span>مميزات النظام</span>
             </a>
             <Link
               href="/admin/products"
-              className="hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap shrink-0"
+              className="h-9 px-4 rounded-full glass-interactive inline-flex items-center hover:text-slate-950 dark:hover:text-white whitespace-nowrap shrink-0"
             >
-              إدارة المنتجات
+              <span>إدارة المنتجات</span>
             </Link>
             <Link
               href="/admin/orders"
-              className="hover:text-slate-950 dark:hover:text-white transition-colors whitespace-nowrap shrink-0"
+              className="h-9 px-4 rounded-full glass-interactive inline-flex items-center hover:text-slate-950 dark:hover:text-white whitespace-nowrap shrink-0"
             >
-              سجل الطلبات
+              <span>سجل الطلبات</span>
             </Link>
           </nav>
 
@@ -108,85 +111,89 @@ export default function HomePage() {
       </header>
 
       <main className="flex-1">
-        {/* Focused Liquid Glass Hero Section */}
+        {/* Open Hero Layout — No Large Wrapping Container Box */}
         <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-14 sm:pt-14 sm:pb-16">
-          <LiquidGlassCard variant="strong" className="p-7 sm:p-12 rounded-[32px]">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              <div className="lg:col-span-7 space-y-5">
-                <p className="text-xs sm:text-sm font-bold text-[var(--lg-primary)]">
-                  نظام صفحات البيع المباشر · Liquid Glass &amp; 3D · الدفع عند الاستلام
-                </p>
-                <h1 className="text-3xl sm:text-5xl font-bold text-slate-950 dark:text-white leading-[1.2] tracking-tight">
-                  صفحة هبوط مستقلة لكل منتج بتجربة زجاجية ثلاثية الأبعاد
-                </h1>
-                <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl">
-                  أنشئ رابط بيع مباشر فريد لكل منتج بصيغة{' '}
-                  <code
-                    className="inline-block font-mono text-sm text-slate-900 dark:text-slate-100 bg-slate-900/6 dark:bg-white/10 px-2 py-0.5 rounded-lg"
-                    dir="ltr"
-                  >
-                    /p/product-slug
-                  </code>{' '}
-                  خالٍ تماماً من القوائم والروابط المشتتة، بألوان تتكيف مع كل منتج،
-                  مع استقبال فوري للطلبات وتنبيهات لحظية وتصدير Excel.
-                </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+            <div className="lg:col-span-7 space-y-5" data-glass-reveal="">
+              <p className="text-xs sm:text-sm font-bold text-[var(--lg-primary)] glass-text-shadow">
+                نظام صفحات البيع المباشر · Liquid Glass &amp; 3D · الدفع عند الاستلام
+              </p>
+              <h1 className="text-3xl sm:text-5xl font-bold text-slate-950 dark:text-white leading-[1.2] tracking-tight glass-text-shadow">
+                صفحة هبوط مستقلة لكل منتج بتجربة زجاجية ثلاثية الأبعاد
+              </h1>
+              <p className="text-base sm:text-lg text-slate-700 dark:text-slate-200 leading-relaxed max-w-2xl glass-text-shadow">
+                أنشئ رابط بيع مباشر فريد لكل منتج بصيغة{' '}
+                <code
+                  className="inline-block font-mono text-sm text-slate-900 dark:text-slate-100 glass rounded-full px-2.5 py-0.5 align-middle"
+                  dir="ltr"
+                >
+                  /p/product-slug
+                </code>{' '}
+                خالٍ تماماً من القوائم والروابط المشتتة، بألوان تتكيف مع كل منتج،
+                مع استقبال فوري للطلبات وتنبيهات لحظية وتصدير Excel.
+              </p>
 
-                <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <LiquidLinkButton
+                  href="/admin"
+                  className="h-12 px-6 text-sm whitespace-nowrap"
+                >
+                  <span>الدخول إلى لوحة التحكم</span>
+                  <ArrowLeft className="w-4 h-4" />
+                </LiquidLinkButton>
+                {products[0] && (
                   <LiquidLinkButton
-                    href="/admin"
-                    className="h-12 px-6 text-sm whitespace-nowrap"
+                    href={`/p/${products[0].slug}`}
+                    variant="glass"
+                    className="h-12 px-5 text-sm whitespace-nowrap"
                   >
-                    <span>الدخول إلى لوحة التحكم</span>
-                    <ArrowLeft className="w-4 h-4" />
+                    <span>معاينة صفحة بيع حية</span>
+                    <ExternalLink className="w-4 h-4" />
                   </LiquidLinkButton>
-                  {products[0] && (
-                    <LiquidLinkButton
-                      href={`/p/${products[0].slug}`}
-                      variant="glass"
-                      className="h-12 px-5 text-sm whitespace-nowrap"
-                    >
-                      <span>معاينة صفحة بيع حية</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </LiquidLinkButton>
-                  )}
-                </div>
-              </div>
-
-              <div className="lg:col-span-5">
-                <div className="liquid-glass-subtle rounded-[24px] p-6 space-y-4">
-                  <div className="text-sm font-bold text-slate-950 dark:text-white">
-                    مسار العميل داخل صفحة المنتج
-                  </div>
-                  <ol className="space-y-3 text-sm text-slate-700 dark:text-slate-200">
-                    <li className="flex items-center justify-between border-b border-slate-200/70 dark:border-white/10 pb-2.5">
-                      <span>01. عرض ثلاثي الأبعاد ومعرض صور</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
-                        3D &amp; Parallax
-                      </span>
-                    </li>
-                    <li className="flex items-center justify-between border-b border-slate-200/70 dark:border-white/10 pb-2.5">
-                      <span>02. السعر، المؤقت، ومؤشرات الثقة</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
-                        Liquid Glass
-                      </span>
-                    </li>
-                    <li className="flex items-center justify-between border-b border-slate-200/70 dark:border-white/10 pb-2.5">
-                      <span>03. نموذج طلب ذكي بحماية من التكرار</span>
-                      <span className="text-xs text-slate-500 dark:text-slate-400">
-                        تحقق 01x
-                      </span>
-                    </li>
-                    <li className="flex items-center justify-between">
-                      <span>04. تقييمات العملاء والأسئلة الشائعة</span>
-                      <span className="text-xs font-bold text-[var(--lg-primary)]">
-                        تحويل مباشر
-                      </span>
-                    </li>
-                  </ol>
-                </div>
+                )}
               </div>
             </div>
-          </LiquidGlassCard>
+
+            {/* Individual Floating Liquid Glass Journey Card */}
+            <div className="lg:col-span-5">
+              <LiquidGlassCard
+                variant="strong"
+                reveal
+                revealDelay={70}
+                className="p-6 rounded-[24px] space-y-4"
+              >
+                <div className="text-sm font-bold text-slate-950 dark:text-white">
+                  مسار العميل داخل صفحة المنتج
+                </div>
+                <ol className="space-y-3 text-sm text-slate-700 dark:text-slate-200">
+                  <li className="flex items-center justify-between border-b border-slate-300/40 dark:border-white/10 pb-2.5">
+                    <span>01. عرض ثلاثي الأبعاد ومعرض صور</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      3D &amp; Parallax
+                    </span>
+                  </li>
+                  <li className="flex items-center justify-between border-b border-slate-300/40 dark:border-white/10 pb-2.5">
+                    <span>02. السعر، المؤقت، ومؤشرات الثقة</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      Liquid Glass
+                    </span>
+                  </li>
+                  <li className="flex items-center justify-between border-b border-slate-300/40 dark:border-white/10 pb-2.5">
+                    <span>03. نموذج طلب ذكي بحماية من التكرار</span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400">
+                      تحقق 01x
+                    </span>
+                  </li>
+                  <li className="flex items-center justify-between">
+                    <span>04. تقييمات العملاء والأسئلة الشائعة</span>
+                    <span className="text-xs font-bold text-[var(--lg-primary)]">
+                      تحويل مباشر
+                    </span>
+                  </li>
+                </ol>
+              </LiquidGlassCard>
+            </div>
+          </div>
         </section>
 
         {/* Active Independent Landing Pages Preview Section */}
@@ -194,27 +201,30 @@ export default function HomePage() {
           id="live-pages"
           className="max-w-6xl mx-auto px-4 sm:px-6 pb-16 space-y-6"
         >
-          <div className="flex flex-wrap items-end justify-between gap-4">
+          <div
+            data-glass-reveal=""
+            className="flex flex-wrap items-end justify-between gap-4"
+          >
             <div className="space-y-1">
-              <h2 className="text-2xl font-bold text-slate-950 dark:text-white">
+              <h2 className="text-2xl font-bold text-slate-950 dark:text-white glass-text-shadow">
                 صفحات الهبوط الجاهزة للمعاينة
               </h2>
-              <p className="text-sm text-slate-600 dark:text-slate-300">
+              <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
                 افتح أي رابط لتجربة صفحة العميل المستقلة بألوانها المتكيفة ووضع
                 العرض ثلاثي الأبعاد والوضع النهاري/الليلي
               </p>
             </div>
             <Link
               href="/admin/products"
-              className="text-sm font-bold text-[var(--lg-primary)] hover:opacity-80 inline-flex items-center gap-1 transition-opacity"
+              className="h-10 px-4 rounded-full glass-interactive text-sm font-bold text-[var(--lg-primary)] inline-flex items-center gap-1.5 whitespace-nowrap"
             >
-              إضافة منتج جديد من لوحة التحكم
+              <span>إضافة منتج جديد من لوحة التحكم</span>
               <ArrowLeft className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {products.map((product) => {
+            {products.map((product, index) => {
               const discount = calculateDiscountPercent(
                 product.price,
                 product.originalPrice,
@@ -225,9 +235,11 @@ export default function HomePage() {
                 <LiquidGlassCard
                   key={product.slug}
                   variant="strong"
-                  className="flex flex-col"
+                  reveal
+                  revealDelay={index * 75}
+                  className="flex flex-col rounded-[24px]"
                 >
-                  <div className="relative aspect-[4/3] w-full bg-slate-100 dark:bg-slate-900 border-b border-white/40 dark:border-white/10">
+                  <div className="relative aspect-[4/3] w-full bg-slate-100/70 dark:bg-slate-900/70 border-b border-white/40 dark:border-white/10">
                     {product.images[0] &&
                     !product.images[0].startsWith('/api/uploads/') ? (
                       <Image
@@ -251,7 +263,7 @@ export default function HomePage() {
 
                   <div className="p-6 flex-1 flex flex-col justify-between gap-5">
                     <div className="space-y-2.5">
-                      <div className="flex items-center justify-between gap-2 text-xs text-slate-500 dark:text-slate-400">
+                      <div className="flex items-center justify-between gap-2 text-xs text-slate-600 dark:text-slate-300">
                         <span className="inline-flex items-center gap-2 font-mono" dir="ltr">
                           <span
                             className="w-2.5 h-2.5 rounded-full inline-block"
@@ -288,7 +300,7 @@ export default function HomePage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2.5 pt-3 border-t border-slate-200/70 dark:border-white/10">
+                    <div className="flex items-center gap-2.5 pt-3 border-t border-slate-300/40 dark:border-white/10">
                       <LiquidLinkButton
                         href={`/p/${product.slug}`}
                         className="flex-1 h-11 px-5 text-sm whitespace-nowrap"
@@ -322,55 +334,55 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Core Capabilities Section */}
+        {/* Core Capabilities Section — 4 Individual Staggered Glass Cards */}
         <section id="capabilities" className="max-w-6xl mx-auto px-4 sm:px-6 pb-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            <LiquidGlassCard className="p-6">
+            <LiquidGlassCard reveal revealDelay={0} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <Box className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
                   عرض 3D وتصميم Liquid Glass
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                   أسطح زجاجية بتمويه متدرج وتفاعل 3D مع حركة المؤشر والهاتف مع
                   وضع خفيف تلقائي للأجهزة الاقتصادية.
                 </p>
               </div>
             </LiquidGlassCard>
 
-            <LiquidGlassCard className="p-6">
+            <LiquidGlassCard reveal revealDelay={70} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <Bell className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
                   إشعارات لحظية متعددة القنوات
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                   تنبيه صوتي وعداد فوري داخل لوحة التحكم مع دعم الإرسال الفوري عبر
                   تيليجرام وواتساب والبريد الإلكتروني.
                 </p>
               </div>
             </LiquidGlassCard>
 
-            <LiquidGlassCard className="p-6">
+            <LiquidGlassCard reveal revealDelay={140} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <FileSpreadsheet className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
                   فلترة وتصدير Excel
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                   تصفية الطلبات حسب المنتج أو الحالة أو التاريخ وتصديرها بضغطة زر
                   لملف Excel منسق جاهز لشركات الشحن.
                 </p>
               </div>
             </LiquidGlassCard>
 
-            <LiquidGlassCard className="p-6">
+            <LiquidGlassCard reveal revealDelay={210} dense className="p-6 rounded-[22px]">
               <div className="space-y-2.5">
                 <ShieldCheck className="w-5 h-5 text-[var(--lg-primary)]" />
                 <h3 className="text-base font-bold text-slate-950 dark:text-white">
                   حماية ذكية من السبام والتكرار
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">
                   تحقق ذكي لأرقام الموبايل المصرية، ومنع الطلبات المكررة، وحماية
                   Honeypot بجانب قواعد أمان Firestore.
                 </p>
@@ -380,16 +392,17 @@ export default function HomePage() {
         </section>
       </main>
 
-      <footer className="px-4 pb-6">
-        <div className="max-w-6xl mx-auto liquid-glass-subtle rounded-[22px] px-5 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-slate-600 dark:text-slate-400">
-          <span>
+      {/* Open Layout Footer — No Large Container Box */}
+      <footer className="px-4 sm:px-6 pb-8 pt-2">
+        <div className="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-4 text-xs text-slate-700 dark:text-slate-300">
+          <span className="glass-text-shadow">
             صفحة بيع — نظام صفحات الهبوط المستقلة للمنتجات بنظام الدفع عند الاستلام
           </span>
           <Link
             href="/admin"
-            className="hover:text-slate-950 dark:hover:text-white font-bold transition-colors"
+            className="h-9 px-4 rounded-full liquid-btn-glass inline-flex items-center font-bold text-slate-900 dark:text-white"
           >
-            دخول المسؤول
+            <span>دخول المسؤول</span>
           </Link>
         </div>
       </footer>

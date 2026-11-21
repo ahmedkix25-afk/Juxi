@@ -1,8 +1,6 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'motion/react';
-import { DESIGN_TOKENS } from '@/lib/design-tokens';
 
 interface DepthRevealProps {
   children: React.ReactNode;
@@ -22,18 +20,12 @@ export function DepthReveal({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0.9, y: 16, scale: 0.985 }}
-      whileInView={{ opacity: 1, y: 0, scale: 1 }}
-      viewport={{ once: true, amount: 0.12 }}
-      transition={{
-        duration: DESIGN_TOKENS.motion.baseMs / 1000,
-        delay,
-        ease: DESIGN_TOKENS.motion.ease,
-      }}
+    <div
+      data-glass-reveal=""
+      data-glass-delay={delay > 0 ? String(Math.round(delay * 1000)) : undefined}
       className={className}
     >
       {children}
-    </motion.div>
+    </div>
   );
 }

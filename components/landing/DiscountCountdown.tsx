@@ -44,7 +44,7 @@ export function DiscountCountdown({
   return (
     <div
       data-testid="offer-urgency-bar"
-      className="rounded-[22px] liquid-glass-subtle px-4 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm"
+      className="rounded-[20px] glass liquid-glass-subtle px-4 py-3.5 flex flex-wrap items-center justify-between gap-3 text-xs sm:text-sm"
     >
       {showStock && (
         <div className="inline-flex items-center gap-2 font-semibold text-amber-800 dark:text-amber-300">

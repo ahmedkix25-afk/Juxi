@@ -9,11 +9,19 @@ import { ThemeToggle } from '@/components/ThemeProvider';
 import { MeshGradientBackdrop } from '@/components/ui/MeshGradientBackdrop';
 import { LiquidGlassCard } from '@/components/ui/LiquidGlassCard';
 import { LiquidButton } from '@/components/ui/LiquidButton';
+import { formatFirebaseAuthError } from '@/lib/auth-errors';
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const { user, isAdmin, authReady, signInWithEmail, signInWithGoogle } =
-    useFirebaseAuth();
+  const {
+    user,
+    isAdmin,
+    authReady,
+    redirectAuthError,
+    clearRedirectAuthError,
+    signInWithEmail,
+    signInWithGoogle,
+  } = useFirebaseAuth();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -30,6 +38,7 @@ export default function AdminLoginPage() {
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    clearRedirectAuthError();
 
     if (!email.trim() || !password) {
       setError('يرجى إدخال البريد الإلكتروني وكلمة المرور.');
@@ -41,22 +50,11 @@ export default function AdminLoginPage() {
       await signInWithEmail(email, password);
       router.replace('/admin');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : '';
-      if (
-        msg.includes('auth/operation-not-allowed') ||
-        msg.includes('auth/configuration-not-found')
-      ) {
-        setError(
-          'مزود البريد وكلمة المرور غير مُفعّل بعد في Firebase Console. يمكنك تفعيله من Authentication → Sign-in method، أو تسجيل الدخول مباشرة بحساب Google أدناه.',
-        );
-      } else if (
-        msg.includes('auth/invalid-credential') ||
-        msg.includes('auth/wrong-password') ||
-        msg.includes('auth/user-not-found')
-      ) {
-        setError('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
-      } else {
-        setError('تعذر تسجيل الدخول. يرجى التحقق من البيانات والمحاولة مرة أخرى.');
+      const hostname =
+        typeof window !== 'undefined' ? window.location.hostname : undefined;
+      const formatted = formatFirebaseAuthError(err, 'email', hostname);
+      if (formatted) {
+        setError(formatted);
       }
     } finally {
       setSubmitting(false);
@@ -65,22 +63,27 @@ export default function AdminLoginPage() {
 
   const handleGoogleLogin = async () => {
     setError('');
+    clearRedirectAuthError();
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
       router.replace('/admin');
     } catch (err) {
-      const msg = err instanceof Error ? err.message : '';
-      if (!msg.includes('popup-closed-by-user')) {
-        setError('تعذر تسجيل الدخول بحساب Google. حاول مرة أخرى.');
+      const hostname =
+        typeof window !== 'undefined' ? window.location.hostname : undefined;
+      const formatted = formatFirebaseAuthError(err, 'google', hostname);
+      if (formatted) {
+        setError(formatted);
       }
     } finally {
       setGoogleLoading(false);
     }
   };
 
+  const displayedError = error || redirectAuthError;
+
   return (
-    <main className="relative min-h-screen flex flex-col items-center justify-center p-6 overflow-x-clip">
+    <main className="relative min-h-screen flex flex-col items-center justify-center p-6 pt-16 sm:pt-6 overflow-x-clip">
       <MeshGradientBackdrop />
 
       <div className="fixed top-5 left-5 z-30">
@@ -88,27 +91,32 @@ export default function AdminLoginPage() {
       </div>
 
       <div className="w-full max-w-md space-y-6 relative z-10">
-        <div className="text-center space-y-2">
-          <p className="text-xs font-bold text-[var(--lg-primary)]">
+        <div data-glass-reveal="" className="text-center space-y-2">
+          <p className="text-xs font-bold text-[var(--lg-primary)] glass-text-shadow">
             صفحة بيع · بوابة الإدارة الآمنة
           </p>
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white tracking-tight glass-text-shadow">
             تسجيل دخول لوحة التحكم
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-300">
+          <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
             أدخل بيانات المسؤول لإدارة صفحات المنتجات والطلبات الفورية
           </p>
         </div>
 
-        <LiquidGlassCard variant="strong" className="p-6 sm:p-8 rounded-[32px]">
+        <LiquidGlassCard
+          variant="strong"
+          reveal
+          revealDelay={70}
+          className="p-6 sm:p-8 rounded-[24px]"
+        >
           <div className="space-y-5">
-            {error && (
+            {displayedError && (
               <div
                 role="alert"
                 className="p-3.5 rounded-[18px] bg-red-500/12 dark:bg-red-500/20 border border-red-500/30 text-red-700 dark:text-red-200 text-xs sm:text-sm flex items-start gap-2.5 leading-relaxed"
               >
                 <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
-                <span>{error}</span>
+                <span>{displayedError}</span>
               </div>
             )}
 

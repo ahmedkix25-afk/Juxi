@@ -59,53 +59,54 @@ export default function AdminOverviewPage() {
 
   return (
     <div className="space-y-6">
-      {/* Liquid Glass Top Hero Action Strip */}
-      <LiquidGlassCard variant="strong" className="p-6 sm:p-7 rounded-[28px]">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-1">
-            <p className="text-xs font-bold text-[var(--lg-primary)]">
-              لوحة المتابعة اللحظية · الدفع عند الاستلام (COD)
-            </p>
-            <h2 className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white tracking-tight">
-              مرحباً بك في إدارة المبيعات المباشرة
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              متابعة فورية لصفحات الهبوط النشطة وطلبات العملاء الواردة
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            {!loadingProducts && products.length === 0 && (
-              <LiquidButton
-                type="button"
-                variant="glass"
-                disabled={seeding}
-                onClick={handleSeedDemo}
-                className="h-11 px-5 text-sm whitespace-nowrap"
-              >
-                {seeding ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Sparkles className="w-4 h-4 text-[var(--lg-primary)]" />
-                )}
-                <span>إضافة منتجين تجريبيين</span>
-              </LiquidButton>
-            )}
-
-            <LiquidLinkButton
-              href="/admin/products?new=1"
-              className="h-11 px-6 text-sm whitespace-nowrap"
-            >
-              <Plus className="w-4 h-4" />
-              <span>إضافة منتج جديد</span>
-            </LiquidLinkButton>
-          </div>
+      {/* Open Header Action Strip — Pure Layout Only */}
+      <div
+        data-glass-reveal=""
+        className="flex flex-wrap items-center justify-between gap-4 pt-1"
+      >
+        <div className="space-y-1">
+          <p className="text-xs font-bold text-[var(--lg-primary)] glass-text-shadow">
+            لوحة المتابعة اللحظية · الدفع عند الاستلام (COD)
+          </p>
+          <h2 className="text-xl sm:text-2xl font-bold text-slate-950 dark:text-white tracking-tight glass-text-shadow">
+            مرحباً بك في إدارة المبيعات المباشرة
+          </h2>
+          <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
+            متابعة فورية لصفحات الهبوط النشطة وطلبات العملاء الواردة
+          </p>
         </div>
-      </LiquidGlassCard>
 
-      {/* KPI Summary Grid (Liquid Glass Cards) */}
+        <div className="flex flex-wrap items-center gap-3">
+          {!loadingProducts && products.length === 0 && (
+            <LiquidButton
+              type="button"
+              variant="glass"
+              disabled={seeding}
+              onClick={handleSeedDemo}
+              className="h-11 px-5 text-sm whitespace-nowrap"
+            >
+              {seeding ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4 text-[var(--lg-primary)]" />
+              )}
+              <span>إضافة منتجين تجريبيين</span>
+            </LiquidButton>
+          )}
+
+          <LiquidLinkButton
+            href="/admin/products?new=1"
+            className="h-11 px-6 text-sm whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            <span>إضافة منتج جديد</span>
+          </LiquidLinkButton>
+        </div>
+      </div>
+
+      {/* KPI Summary Grid (Individual Staggered Liquid Glass Cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <LiquidGlassCard className="p-5 rounded-[24px]">
+        <LiquidGlassCard reveal revealDelay={0} dense className="p-5 rounded-[22px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
               <span>طلبات جديدة بانتظار التأكيد</span>
@@ -120,7 +121,7 @@ export default function AdminOverviewPage() {
           </div>
         </LiquidGlassCard>
 
-        <LiquidGlassCard className="p-5 rounded-[24px]">
+        <LiquidGlassCard reveal revealDelay={70} dense className="p-5 rounded-[22px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
               <span>إجمالي الطلبات المسجلة</span>
@@ -135,7 +136,7 @@ export default function AdminOverviewPage() {
           </div>
         </LiquidGlassCard>
 
-        <LiquidGlassCard className="p-5 rounded-[24px]">
+        <LiquidGlassCard reveal revealDelay={140} dense className="p-5 rounded-[22px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
               <span>قيمة الطلبات النشطة</span>
@@ -155,7 +156,7 @@ export default function AdminOverviewPage() {
           </div>
         </LiquidGlassCard>
 
-        <LiquidGlassCard className="p-5 rounded-[24px]">
+        <LiquidGlassCard reveal revealDelay={210} dense className="p-5 rounded-[22px]">
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400">
               <span>صفحات المنتجات النشطة</span>
@@ -175,7 +176,10 @@ export default function AdminOverviewPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         <LiquidGlassCard
           variant="strong"
-          className="lg:col-span-7 rounded-[28px]"
+          dense
+          reveal
+          revealDelay={60}
+          className="lg:col-span-7 rounded-[24px]"
         >
           <div className="px-6 py-4 border-b border-slate-200/70 dark:border-white/10 flex items-center justify-between">
             <h3 className="text-base font-bold text-slate-950 dark:text-white">
@@ -243,7 +247,10 @@ export default function AdminOverviewPage() {
 
         <LiquidGlassCard
           variant="strong"
-          className="lg:col-span-5 rounded-[28px]"
+          dense
+          reveal
+          revealDelay={130}
+          className="lg:col-span-5 rounded-[24px]"
         >
           <div className="px-6 py-4 border-b border-slate-200/70 dark:border-white/10 flex items-center justify-between">
             <h3 className="text-base font-bold text-slate-950 dark:text-white">

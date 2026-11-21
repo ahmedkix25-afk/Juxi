@@ -357,7 +357,7 @@ export function ProductLandingView({ slug }: ProductLandingViewProps) {
 
             {/* 2. Product Name + Optional Countdown / Remaining Stock */}
             <div className="space-y-4">
-              <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white leading-tight tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-950 dark:text-white leading-tight tracking-tight glass-text-shadow">
                 {product.name}
               </h1>
 
@@ -369,8 +369,10 @@ export function ProductLandingView({ slug }: ProductLandingViewProps) {
               {/* 3. Liquid Glass Pricing Section */}
               <LiquidGlassCard
                 variant="strong"
+                reveal={!lightweight}
+                revealDelay={60}
                 lightweight={lightweight}
-                className="p-5 sm:p-6"
+                className="p-5 sm:p-6 rounded-[22px]"
               >
                 <div className="space-y-4">
                   <div className="flex flex-wrap items-baseline justify-between gap-3">
@@ -423,7 +425,7 @@ export function ProductLandingView({ slug }: ProductLandingViewProps) {
             <DepthReveal disabled={lightweight}>
               <LiquidGlassCard
                 lightweight={lightweight}
-                className="p-5 sm:p-6"
+                className="p-5 sm:p-6 rounded-[22px]"
               >
                 <div className="space-y-5">
                   <p className="text-slate-700 dark:text-slate-200 text-base leading-relaxed whitespace-pre-line">
@@ -470,8 +472,10 @@ export function ProductLandingView({ slug }: ProductLandingViewProps) {
           >
             <LiquidGlassCard
               variant="strong"
+              reveal={!lightweight}
+              revealDelay={80}
               lightweight={lightweight}
-              className="p-5 sm:p-6"
+              className="p-5 sm:p-6 rounded-[24px]"
             >
               <div className="space-y-4">
                 <div className="space-y-0.5 border-b border-slate-200/70 dark:border-white/10 pb-3.5">

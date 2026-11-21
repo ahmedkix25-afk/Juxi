@@ -93,55 +93,56 @@ function AdminProductsContent() {
 
   return (
     <div className="space-y-6">
-      <LiquidGlassCard variant="strong" className="p-6 rounded-[28px]">
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div className="space-y-0.5">
-            <h2 className="text-xl font-bold text-slate-950 dark:text-white">
-              إدارة المنتجات وصفحات الهبوط
-            </h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300">
-              كل منتج يُنشئ تلقائياً صفحة هبوط مستقلة جاهزة للنسخ والإعلانات
-            </p>
-          </div>
+      <div
+        data-glass-reveal=""
+        className="flex flex-wrap items-center justify-between gap-4 pt-1"
+      >
+        <div className="space-y-0.5">
+          <h2 className="text-xl font-bold text-slate-950 dark:text-white glass-text-shadow">
+            إدارة المنتجات وصفحات الهبوط
+          </h2>
+          <p className="text-sm text-slate-700 dark:text-slate-300 glass-text-shadow">
+            كل منتج يُنشئ تلقائياً صفحة هبوط مستقلة جاهزة للنسخ والإعلانات
+          </p>
+        </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            {products.length === 0 && !loadingProducts && (
-              <LiquidButton
-                type="button"
-                variant="glass"
-                disabled={seeding}
-                onClick={handleSeed}
-                className="h-11 px-5 text-sm whitespace-nowrap"
-              >
-                {seeding ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Sparkles className="w-4 h-4 text-[var(--lg-primary)]" />
-                )}
-                <span>إضافة منتجات تجريبية</span>
-              </LiquidButton>
-            )}
-
+        <div className="flex flex-wrap items-center gap-3">
+          {products.length === 0 && !loadingProducts && (
             <LiquidButton
               type="button"
-              onClick={() => {
-                setEditingProduct(null);
-                setModalOpen(true);
-              }}
+              variant="glass"
+              disabled={seeding}
+              onClick={handleSeed}
               className="h-11 px-5 text-sm whitespace-nowrap"
             >
-              <Plus className="w-4 h-4" />
-              <span>إضافة منتج جديد</span>
+              {seeding ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Sparkles className="w-4 h-4 text-[var(--lg-primary)]" />
+              )}
+              <span>إضافة منتجات تجريبية</span>
             </LiquidButton>
-          </div>
+          )}
+
+          <LiquidButton
+            type="button"
+            onClick={() => {
+              setEditingProduct(null);
+              setModalOpen(true);
+            }}
+            className="h-11 px-5 text-sm whitespace-nowrap"
+          >
+            <Plus className="w-4 h-4" />
+            <span>إضافة منتج جديد</span>
+          </LiquidButton>
         </div>
-      </LiquidGlassCard>
+      </div>
 
       {/* Ready-to-copy link banner immediately after creating a product */}
       {recentlyCreated && (
         <LiquidGlassCard
           variant="strong"
-          className="p-5 rounded-[24px] border border-[var(--lg-primary)]/30"
+          className="p-5 rounded-[22px] border border-[var(--lg-primary)]/30"
         >
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="space-y-1 min-w-0">
@@ -188,8 +189,8 @@ function AdminProductsContent() {
         </LiquidGlassCard>
       )}
 
-      {/* Products Table */}
-      <LiquidGlassCard variant="strong" className="rounded-[28px]">
+      {/* Products Table (Dense Blur for Long Lists) */}
+      <LiquidGlassCard variant="strong" dense reveal className="rounded-[24px]">
         {loadingProducts ? (
           <div className="p-10 text-center text-sm text-slate-500 dark:text-slate-400">
             جاري تحميل المنتجات...

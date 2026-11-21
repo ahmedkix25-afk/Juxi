@@ -169,7 +169,7 @@ export function ProductFormModal({
       aria-labelledby="product-modal-title"
       className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/50 backdrop-blur-md"
     >
-      <div className="liquid-glass-strong rounded-[32px] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="glass liquid-glass-strong rounded-[24px] w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden">
         <div className="px-6 py-4 border-b border-slate-200/70 dark:border-white/10 flex items-center justify-between">
           <h2
             id="product-modal-title"
